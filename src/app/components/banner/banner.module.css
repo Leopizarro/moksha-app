@@ -1,0 +1,11 @@
+.glowingTextBlack {
+    color:white;
+    text-align:center;
+    text-shadow: 1px 1px 7px black,
+                 1px 0 black, -1px 0 black, 0 1px black, 0 -1px black,
+                 1px 1px black, -1px -1px black, 1px -1px black, -1px 1px black;
+  }
+  
+  .glowingBoxBottom {
+    box-shadow: 0 18px 20px -20px #6c6c6c;
+  }
