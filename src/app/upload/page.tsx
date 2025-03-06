@@ -9,7 +9,6 @@ export const metadata = {
 export default async function CreatePostForm() {
   const productCategories = await getDocsFromCollection("product_categories");
   const productStates = await getDocsFromCollection("product_states");
-  console.log(productCategories, productStates);
 
   return (
     <Grid2

@@ -9,7 +9,6 @@ import { Grid2, Typography } from "@mui/material";
 
 export default async function Home() {
   const products = await getDocsFromCollection("products");
-  console.log(products);
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">

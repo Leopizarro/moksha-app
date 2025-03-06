@@ -10,7 +10,6 @@ interface ProductItemInterface {
 
 const ProductItem: React.FC<ProductItemInterface> = (props) => {
   const { product } = props;
-  console.log("aaa", product.createdAt.toDate(), "productid->", product?.id);
   return (
     <Link href={`/product/${product.id}`} style={{ textDecoration: "none" }}>
       <Card sx={{ cursor: "pointer" }}>
