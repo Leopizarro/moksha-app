@@ -24,14 +24,9 @@ const authConfig: NextAuthOptions = {
         };
         const q = query(collection(db, "users"), where("email", "==", email));
         const querySnapshot = await getDocs(q);
-        console.log("333333333333333333333333333");
         const docRef = await doc(db, "users", "wbkP0Io4IT4RMc8mdAso");
-        console.log("TESTING------------->", querySnapshot.size);
         const docSnap = await getDoc(docRef);
-        console.log("TESTING 2");
         const adminUser = docSnap.data();
-        console.log("TESTING 3");
-        console.log(password, adminUser?.password);
         const isValid = await verifyPassword(password, adminUser?.password);
         if (email.toLowerCase() === adminUser?.email.toLowerCase() && isValid) {
           return adminUser.email.toLowerCase();
