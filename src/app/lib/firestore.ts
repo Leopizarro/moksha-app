@@ -32,7 +32,7 @@ export const addProductToCollection = async (productInfo: {
 export const getDocsFromCollection = async (collectionName: string) => {
   try {
     const docs = await getDocs(collection(db, collectionName));
-    const docsData = docs.docs.map((item) => item.data());
+    const docsData = docs.docs.map((item) => ({ id: item.id, ...item.data() }));
     return {
       ok: true,
       docs: docsData,

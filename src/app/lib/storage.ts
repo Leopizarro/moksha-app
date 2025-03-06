@@ -17,13 +17,13 @@ export async function uploadFile(file: File): Promise<uploadImageResponse> {
   const storageRef = ref(storage, `images/${file.name}`);
   const thumbnailStorageRef = ref(storage, `thumbnails/${file.name}`);
 
-  const fullImage = await resizeImage(file, 1280);
+  const fullImage = await resizeImage(file, 1200);
   const imageUrl = await uploadImageToStorage(
     new Uint8Array(fullImage),
     storageRef
   );
 
-  const thumbnailImage = await resizeImage(file, 380);
+  const thumbnailImage = await resizeImage(file, 300);
   const thumbnailImageUrl = await uploadImageToStorage(
     new Uint8Array(thumbnailImage),
     thumbnailStorageRef
