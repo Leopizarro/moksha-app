@@ -1,5 +1,14 @@
 import { db } from "../fireBaseConfig";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { ProductInterface } from "../interfaces/products.interface";
 
 export const addProductToCollection = async (productInfo: {
   title: string;
@@ -45,6 +54,19 @@ export const getDocsFromCollection = async (collectionName: string) => {
     };
   }
 };
+
+export async function getOneDocFromCollection(
+  docId: string,
+  collectionName: string
+) {
+  if (!docId || !collectionName) {
+    throw new Error("Invalid ID or collection name provided");
+  }
+  const docRef = doc(db, collectionName, docId);
+  const docSnap = await getDoc(docRef);
+  const docData = { id: docSnap.id, ...docSnap.data() } as ProductInterface;
+  return docData;
+}
 
 export const addUserToCollection = async (userInfo: {
   email: string;
