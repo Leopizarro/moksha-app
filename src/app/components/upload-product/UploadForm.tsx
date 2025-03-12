@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import {
+  Box,
   Button,
   FormControl,
   Grid2,
@@ -27,6 +28,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
 }: UploadFormProps) => {
   const [newProductData, setNewProductData] = useState({
     title: "",
+    description: "",
     price: 0,
     productCategory: "",
     productState: "",
@@ -119,6 +121,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
 
   const buttonDisabled =
     newProductData.title.length < 1 ||
+    newProductData.description.length < 1 ||
     newProductData.price < 1 ||
     !newProductData.productCategory ||
     !newProductData.productState ||
@@ -126,14 +129,17 @@ const UploadForm: React.FC<UploadFormProps> = ({
     loading;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ width: "600px", maxWidth: "100%", minWidth: "300px" }}
+    >
       {statusMessage && (
         <Typography align="center" sx={{ margin: "5px 0px" }}>
           {statusMessage}
         </Typography>
       )}
 
-      <div>
+      <Box display="flex" flexDirection="column" gap={2}>
         <FormControl fullWidth>
           <TextField
             type="text"
@@ -145,7 +151,19 @@ const UploadForm: React.FC<UploadFormProps> = ({
           />
         </FormControl>
 
-        <FormControl fullWidth sx={{ marginTop: "10px" }}>
+        <FormControl fullWidth>
+          <TextField
+            type="text"
+            label="Descripción producto"
+            multiline
+            rows={4}
+            required
+            fullWidth
+            onChange={(e) => handleFormChange(e.target.value, "description")}
+          />
+        </FormControl>
+
+        <FormControl fullWidth>
           <InputLabel
             id="demo-simple-select-label"
             sx={{ background: "white", padding: "0px 3px" }}
@@ -170,7 +188,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
           </Select>
         </FormControl>
         {/* Preivew File */}
-        <FormControl fullWidth sx={{ marginTop: "10px" }}>
+        <FormControl fullWidth>
           <TextField
             type="number"
             label="Precio"
@@ -181,7 +199,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
           />
         </FormControl>
 
-        <FormControl fullWidth sx={{ marginTop: "10px" }}>
+        <FormControl fullWidth>
           <InputLabel
             id="demo-simple-select-label"
             sx={{ background: "white", padding: "0px 3px" }}
@@ -204,7 +222,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
           </Select>
         </FormControl>
 
-        <FormControl fullWidth sx={{ marginTop: "10px" }}>
+        <FormControl fullWidth>
           <input
             name="media"
             type="file"
@@ -226,13 +244,14 @@ const UploadForm: React.FC<UploadFormProps> = ({
             />
           </Grid2>
         )}
-      </div>
+      </Box>
 
-      <FormControl fullWidth sx={{ marginTop: "10px" }}>
+      <FormControl fullWidth>
         <Button
           type="submit"
           variant="contained"
           color="success"
+          sx={{ marginTop: "10px" }}
           disabled={buttonDisabled}
           aria-disabled={buttonDisabled}
         >
