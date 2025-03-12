@@ -18,9 +18,7 @@ export default function ProductInfoBox({ product }: ProductInfoBoxInterface) {
           {firstLetterUpperCase(product.productCategory)}
         </Typography>
         <Typography fontSize="1.3rem" marginTop={{ sm: "20px", lg: "40px" }}>
-          Lorem Ipsum es simplemente el texto de relleno de las imprentas y
-          archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de
-          las industrias desde el ...
+          {product?.description}
         </Typography>
       </Box>
       <Typography fontSize="2.4rem" fontWeight="bold" margin="10px 0px">
