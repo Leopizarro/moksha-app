@@ -6,26 +6,24 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { ProductInterface } from "../interfaces/products.interface";
 
-export const addProductToCollection = async (productInfo: {
-  title: string;
-  price: number;
-  productCategory: string;
-  productState: string;
-  imageUrl: string;
-}) => {
+export const addProductToCollection = async (productInfo: ProductInterface) => {
   try {
     const newProduct = await addDoc(collection(db, "products"), {
       ...productInfo,
       createdAt: new Date(),
     });
     if (newProduct?.id) {
+      const docSnap = await getDoc(newProduct);
+      const docData = { id: docSnap.id, ...docSnap.data() } as ProductInterface;
       return {
         ok: true,
         message: `Product with id: ${newProduct.id} has been uploaded successfully!`,
+        product: docData,
       };
     }
     throw new Error();
@@ -102,3 +100,24 @@ export const addUserToCollection = async (userInfo: {
     };
   }
 };
+
+export async function updateDocFromCollection(
+  collection: string,
+  id: string,
+  data: object
+) {
+  try {
+    const docRef = doc(db, collection, id);
+    await setDoc(docRef, data, { merge: true });
+    return {
+      ok: true,
+      message: `Document with id ${id} was updated!`,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "There was an error trying to update de document",
+    };
+  }
+}

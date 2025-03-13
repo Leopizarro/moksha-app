@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -14,17 +14,25 @@ import {
 import { useState } from "react";
 import Image from "next/image";
 import GenericSnackbar from "../common/alert/GenericSnackbar";
-import { uploadFile } from "@/app/lib/storage";
-import { addProductToCollection } from "@/app/lib/firestore";
+import { deleteAllFilesFromFolder, uploadFile } from "@/app/lib/storage";
+import {
+  addProductToCollection,
+  updateDocFromCollection,
+} from "@/app/lib/firestore";
+import { ProductInterface } from "@/app/interfaces/products.interface";
 
 interface UploadFormProps {
   productCategories: { name: string }[];
   productStates: { name: string }[];
+  isEdit: boolean;
+  product: ProductInterface;
 }
 
 const UploadForm: React.FC<UploadFormProps> = ({
   productCategories,
   productStates,
+  isEdit = false,
+  product,
 }: UploadFormProps) => {
   const [newProductData, setNewProductData] = useState({
     title: "",
@@ -33,6 +41,18 @@ const UploadForm: React.FC<UploadFormProps> = ({
     productCategory: "",
     productState: "",
   });
+
+  useEffect(() => {
+    if (product) {
+      setNewProductData({
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        productCategory: product.productCategory,
+        productState: product.productState,
+      });
+    }
+  }, [product]);
 
   const [statusMessage, setStatusMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -73,14 +93,29 @@ const UploadForm: React.FC<UploadFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setStatusMessage("creating");
     setLoading(true);
-
     // Do all the image upload and product upload
-    if (file) {
-      try {
-        const imageUrls = await uploadFile(file);
+    try {
+      let newProductRes;
+      if (!isEdit) {
+        newProductRes = await addProductToCollection(newProductData);
+      } else {
+        newProductRes = await updateDocFromCollection(
+          "products",
+          product.id,
+          newProductData
+        );
+      }
+      if (newProductRes.ok && file) {
+        if (isEdit) {
+          await deleteAllFilesFromFolder(`images/${product.id}`);
+          await deleteAllFilesFromFolder(`thumbnails/${product.id}`);
+        }
+        const imageUrls = await uploadFile(
+          file,
+          isEdit ? product.id : newProductRes.product.id
+        );
         if (!imageUrls.imageUrl || !imageUrls.thumbnailImageUrl) {
           setStatusMessage("ERROR!");
           setLoading(false);
@@ -90,32 +125,32 @@ const UploadForm: React.FC<UploadFormProps> = ({
             message: "There was an error uploading the image",
           });
         }
-        // TODO: LOGIC TO UPLOAD THE PRODUCT INFO + IMAGE URLs TO FIRESTORE
-        const newProduct = {
-          ...newProductData,
-          ...imageUrls,
-        };
-        const res = await addProductToCollection(newProduct);
-        if (res?.ok) {
-          setStatusMessage("created");
-          setLoading(false);
-          setAlertObject({
-            open: true,
-            severity: "success",
-            message: "Image uploaded successfully!",
-          });
-          return;
+        const updateResponse = await updateDocFromCollection(
+          "products",
+          isEdit ? product.id : newProductRes.product.id,
+          imageUrls
+        );
+        if (!updateResponse?.ok) {
+          throw new Error("There was an error updating the information");
         }
-      } catch (error) {
-        console.log(error);
-        setStatusMessage("ERROR!");
-        setLoading(false);
-        setAlertObject({
-          open: true,
-          severity: "error",
-          message: "There was an error uploading the image",
-        });
       }
+      setStatusMessage("created");
+      setLoading(false);
+      setAlertObject({
+        open: true,
+        severity: "success",
+        message: "Product uploaded successfully!",
+      });
+      return;
+    } catch (error) {
+      console.log(error);
+      setStatusMessage("ERROR!");
+      setLoading(false);
+      setAlertObject({
+        open: true,
+        severity: "error",
+        message: "There was an error uploading the image",
+      });
     }
   };
 
@@ -125,7 +160,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
     newProductData.price < 1 ||
     !newProductData.productCategory ||
     !newProductData.productState ||
-    !file ||
+    (isEdit ? false : !file) ||
     loading;
 
   return (
@@ -146,6 +181,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
             label="Nombre producto"
             required
             fullWidth
+            value={newProductData.title}
             inputProps={{ "data-testid": "Title" }}
             onChange={(e) => handleFormChange(e.target.value, "title")}
           />
@@ -159,6 +195,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
             rows={4}
             required
             fullWidth
+            value={newProductData.description}
             onChange={(e) => handleFormChange(e.target.value, "description")}
           />
         </FormControl>
@@ -194,6 +231,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
             label="Precio"
             required
             fullWidth
+            value={newProductData.price}
             inputProps={{ "data-testid": "Price" }}
             onChange={(e) => handleFormChange(Number(e.target.value), "price")}
           />
@@ -229,15 +267,15 @@ const UploadForm: React.FC<UploadFormProps> = ({
             accept="image/jpeg"
             data-testid="file-input"
             onChange={handleFileChange}
-            required
+            required={!isEdit}
           />
         </FormControl>
-        {previewUrl && (
+        {(previewUrl || product?.thumbnailImageUrl) && (
           <Grid2 size={12} sx={{ height: "240px", position: "relative" }}>
             <Image
               alt="preview-image"
               fill
-              src={previewUrl}
+              src={previewUrl || product.thumbnailImageUrl}
               style={{
                 objectFit: "contain", // cover, contain, none
               }}

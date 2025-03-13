@@ -4,6 +4,8 @@ import {
   uploadBytesResumable,
   getDownloadURL,
   StorageReference,
+  listAll,
+  deleteObject,
 } from "firebase/storage";
 import { storage } from "../fireBaseConfig";
 import { resizeImage } from "./sharp";
@@ -13,9 +15,12 @@ interface uploadImageResponse {
   thumbnailImageUrl: string | null;
 }
 
-export async function uploadFile(file: File): Promise<uploadImageResponse> {
-  const storageRef = ref(storage, `images/${file.name}`);
-  const thumbnailStorageRef = ref(storage, `thumbnails/${file.name}`);
+export async function uploadFile(
+  file: File,
+  id: string
+): Promise<uploadImageResponse> {
+  const storageRef = ref(storage, `images/${id}/${file.name}`);
+  const thumbnailStorageRef = ref(storage, `thumbnails/${id}/${file.name}`);
 
   const fullImage = await resizeImage(file, 1200);
   const imageUrl = await uploadImageToStorage(
@@ -73,4 +78,25 @@ async function uploadImageToStorage(
       }
     );
   });
+}
+
+export async function deleteAllFilesFromFolder(folderPath: string) {
+  const folderRef = ref(storage, folderPath);
+  try {
+    const allFiles = await listAll(folderRef);
+    const deletePromises = allFiles.items.map((fileRef) =>
+      deleteObject(fileRef)
+    );
+    await Promise.all(deletePromises);
+
+    return {
+      ok: true,
+      message: "folder deleted!",
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: "there was an error trying to delete the folder",
+    };
+  }
 }

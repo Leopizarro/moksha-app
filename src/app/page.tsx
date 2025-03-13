@@ -8,7 +8,8 @@ import styles from "./page.module.css";
 import { Grid2, Typography } from "@mui/material";
 
 export default async function Home() {
-  const products = await getDocsFromCollection("products");
+  const data = await getDocsFromCollection("products");
+  const products = JSON.parse(JSON.stringify(data));
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">

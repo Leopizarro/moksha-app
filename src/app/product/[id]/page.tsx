@@ -13,7 +13,6 @@ export default async function ProductDetails({
 }: ProductDetailsInterface) {
   const productId = (await params).id;
   const product = await getOneDocFromCollection(productId, "products");
-  console.log("product data->", product);
   return (
     <>
       <Box
