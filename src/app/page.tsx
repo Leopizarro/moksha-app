@@ -22,11 +22,10 @@ export default async function Home() {
           justifyContent="center"
           alignContent="center"
         >
-          {products.docs?.length && (
+          {products.docs?.length > 0 ? (
             <ProductsList products={products.docs as ProductInterface[]} />
-          )}
-          {!products.docs && (
-            <Typography align="center">
+          ) : (
+            <Typography align="center" sx={{ marginTop: "15px" }}>
               {" "}
               No se encontraron productos.{" "}
             </Typography>
