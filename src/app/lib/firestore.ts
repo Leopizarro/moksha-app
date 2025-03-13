@@ -2,6 +2,7 @@ import { db } from "../fireBaseConfig";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -118,6 +119,23 @@ export async function updateDocFromCollection(
     return {
       ok: false,
       message: "There was an error trying to update de document",
+    };
+  }
+}
+
+export async function deleteDocFromCollection(collection: string, id: string) {
+  try {
+    const docRef = await doc(db, collection, id);
+    await deleteDoc(docRef);
+    return {
+      ok: true,
+      message: "Document deleted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "There was an error trying to delete the document",
     };
   }
 }
