@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   setDoc,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { ProductInterface } from "../interfaces/products.interface";
@@ -16,7 +17,7 @@ export const addProductToCollection = async (productInfo: ProductInterface) => {
   try {
     const newProduct = await addDoc(collection(db, "products"), {
       ...productInfo,
-      createdAt: new Date(),
+      createdAt: Timestamp.now(),
     });
     if (newProduct?.id) {
       const docSnap = await getDoc(newProduct);
