@@ -140,3 +140,32 @@ export async function deleteDocFromCollection(collection: string, id: string) {
     };
   }
 }
+
+export async function getProductsByState(status: string) {
+  try {
+    const q = query(
+      collection(db, "products"),
+      where("productState", "==", status)
+    );
+    const querySnapshot = await getDocs(q);
+
+    const products = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    console.log(products);
+    return {
+      ok: true,
+      message: "Products on sale retrieved successfully!",
+      products,
+    };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return {
+      ok: false,
+      message: "There was an error trying to delete the document",
+      products: [],
+    };
+  }
+}

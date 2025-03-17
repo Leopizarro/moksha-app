@@ -3,14 +3,15 @@
 import Banner from "./components/banner/Banner";
 import ProductsList from "./components/products-list/ProductsList";
 import { ProductInterface } from "./interfaces/products.interface";
-import { getDocsFromCollection } from "./lib/firestore";
+import { getProductsByState } from "./lib/firestore";
 import styles from "./page.module.css";
 import { Grid2, Typography } from "@mui/material";
 
 export default async function Home() {
-  const data = await getDocsFromCollection("products");
-  const products = JSON.parse(JSON.stringify(data)).docs as ProductInterface[];
-  console.log(products);
+  const data = await getProductsByState("on sale");
+  const products = JSON.parse(
+    JSON.stringify(data.products)
+  ) as ProductInterface[];
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">
