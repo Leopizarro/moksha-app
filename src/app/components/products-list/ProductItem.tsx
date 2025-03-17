@@ -5,10 +5,12 @@ import {
   Box,
   Card,
   CardContent,
+  Divider,
   IconButton,
   Tooltip,
   Typography,
 } from "@mui/material";
+import classes from "./ProductItem.module.css";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,12 +67,21 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
   return (
     <>
       <Link href={`/product/${product.id}`} style={{ textDecoration: "none" }}>
-        <Card sx={{ cursor: "pointer" }}>
-          <CardContent>
+        <Card
+          className={classes.grow}
+          sx={{
+            cursor: "pointer",
+            width: "370px",
+            justifySelf: "center",
+            boxShadow:
+              "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+          }}
+        >
+          <CardContent sx={{ padding: 0, paddingBottom: 0 }}>
             <Box
               sx={{
                 position: "relative",
-                minHeight: { xs: "330px", sm: "370px" },
+                minHeight: { xs: "370px", sm: "370px" },
               }}
             >
               {session && (
@@ -88,6 +99,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                       sx={{
                         postion: "absolute",
                         background: "#d4af37",
+                        margin: "10px",
                         top: "0",
                         zIndex: 10,
                         float: "left",
@@ -114,6 +126,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                         postion: "absolute",
                         background: "#d4af37",
                         top: "0",
+                        margin: "10px",
                         zIndex: 10,
                         float: "right",
                         color: "white",
@@ -132,24 +145,31 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                 src={product?.thumbnailImageUrl}
                 quality={100}
                 fill
-                sizes="100vw"
+                sizes="35vw"
                 style={{
                   objectFit: "contain",
                 }}
               />
             </Box>
-            <Typography
-              gutterBottom
-              sx={{ color: "text.secondary", fontSize: 14 }}
+            <Box
+              padding="10px 15px 0px 15px"
+              display="flex"
+              flexDirection="column"
+              rowGap={1}
             >
-              {firstLetterUpperCase(product?.productCategory)}
-            </Typography>
-            <Typography variant="h6" component="div">
-              {product?.title.toUpperCase()}
-            </Typography>
-            <Typography variant="body2">
-              {formatToCLP(product?.price)}
-            </Typography>
+              <Divider
+                textAlign="center"
+                sx={{ fontSize: "12px", color: "gray" }}
+              >
+                {firstLetterUpperCase(product?.productCategory)}
+              </Divider>
+              <Typography variant="h6" component="div">
+                {product?.title.toUpperCase()}
+              </Typography>
+              <Typography variant="body2">
+                {formatToCLP(product?.price)}
+              </Typography>
+            </Box>
           </CardContent>
         </Card>
       </Link>

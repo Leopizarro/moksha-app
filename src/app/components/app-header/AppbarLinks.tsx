@@ -2,6 +2,7 @@
 import {
   Box,
   Button,
+  Divider,
   Grid,
   IconButton,
   Link,
@@ -126,11 +127,12 @@ const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
                     </Button>
                   }
                 </Link>
-                <Typography
-                  sx={{ margin: "2px 0 0 0", fontSize: "22px", color: "black" }}
-                >
-                  {linkObject.last ? "" : "|"}
-                </Typography>
+
+                {linkObject.last ? (
+                  ""
+                ) : (
+                  <Divider orientation="vertical" variant="middle" flexItem />
+                )}
               </div>
             ))}
           </Grid>
