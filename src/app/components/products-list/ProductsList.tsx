@@ -10,17 +10,18 @@ const ProductsList: React.FC<ProductListInterface> = ({ products }) => {
   return (
     <Grid2
       container
-      spacing={4}
-      columns={12}
-      size={12}
-      margin="25px 10px"
-      justifyContent="center"
-      alignContent="center"
+      direction="row"
+      sx={{
+        justifyContent: "space-around",
+        alignItems: "center",
+        margin: "25px 8px",
+        width: "100%",
+      }}
+      rowGap="25px"
+      spacing={1}
     >
       {products?.map((product, index: number) => (
-        <Grid2 size={{ xs: 12, sm: 6, lg: 4, xl: 3 }} key={index}>
-          <ProductItem product={product} />
-        </Grid2>
+        <ProductItem product={product} key={index} />
       ))}
     </Grid2>
   );

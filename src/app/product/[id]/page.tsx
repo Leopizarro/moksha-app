@@ -1,11 +1,27 @@
 import ProductInfoBox from "@/app/components/product-info-box/ProductInfoBox";
 import { getOneDocFromCollection } from "@/app/lib/firestore";
-import { firstLetterUpperCase, formatToCLP } from "@/app/lib/utils";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { Metadata } from "next";
 import Image from "next/image";
 
 interface ProductDetailsInterface {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const productId = (await params).id;
+  const product = await getOneDocFromCollection(productId, "products");
+
+  return {
+    title: `${product ? product?.title : "No encontrado"} - Mandalas Moksha`,
+    openGraph: {
+      images: [product ? product?.thumbnailImageUrl : ""],
+    },
+  };
 }
 
 export default async function ProductDetails({
@@ -71,8 +87,8 @@ export default async function ProductDetails({
         </Box>
       </Box>
       <Typography align="center" fontSize="0.8rem" padding="10px">
-        *Se hacen entregas en la comuna de Peñalolén y alrededores. En caso de
-        necesitar envío, éste será vía Starken (por pagar).
+        *Se hacen entregas en la comuna de Peñalolén y comunas aledañas. En caso
+        de necesitar envío, éste será vía Starken (por pagar).
       </Typography>
     </>
   );

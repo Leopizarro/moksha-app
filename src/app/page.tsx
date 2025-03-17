@@ -10,6 +10,7 @@ import { Grid2, Typography } from "@mui/material";
 export default async function Home() {
   const data = await getDocsFromCollection("products");
   const products = JSON.parse(JSON.stringify(data)).docs as ProductInterface[];
+  console.log(products);
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">
@@ -22,7 +23,7 @@ export default async function Home() {
           justifyContent="center"
           alignContent="center"
         >
-          {products.docs?.length > 0 ? (
+          {products?.length > 0 ? (
             <ProductsList products={products} />
           ) : (
             <Typography align="center" sx={{ marginTop: "15px" }}>

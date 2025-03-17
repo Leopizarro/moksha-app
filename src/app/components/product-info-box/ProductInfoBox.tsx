@@ -2,6 +2,7 @@ import { ProductInterface } from "@/app/interfaces/products.interface";
 import { firstLetterUpperCase, formatToCLP } from "@/app/lib/utils";
 import { Box, Button, Typography } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import Link from "next/link";
 
 interface ProductInfoBoxInterface {
   product: ProductInterface;
@@ -28,14 +29,18 @@ export default function ProductInfoBox({ product }: ProductInfoBoxInterface) {
         <Typography align="center">
           ¿Te interesa el prouducto? ¡Contáctame por whatsapp!
         </Typography>
-        <Button
-          variant="contained"
-          color="success"
-          sx={{ fontWeight: "bold", width: "100%" }}
-          startIcon={<WhatsAppIcon />}
+        <Link
+          href={`https://wa.me/${process.env.NEXT_PUBLIC_OWNERS_PHONE}?text=¡Hola!%2C%20Me%20interesa%20el%20producto%3A%20${product.title}.`}
         >
-          CONTACTAR
-        </Button>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ fontWeight: "bold", width: "100%" }}
+            startIcon={<WhatsAppIcon />}
+          >
+            CONTACTAR
+          </Button>
+        </Link>
       </Box>
     </>
   );
