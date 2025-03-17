@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   Timestamp,
@@ -141,11 +142,67 @@ export async function deleteDocFromCollection(collection: string, id: string) {
   }
 }
 
-export async function getProductsByState(status: string) {
+export async function getProductsByFilters(filters?: object) {
+  try {
+    let q;
+    if (filters) {
+      let queryFilters = [];
+      Object.entries(filters)?.forEach(([key, value]) => {
+        if (value) {
+          if (Array.isArray(value)) {
+            // Use 'in' for multiple values
+            queryFilters.push(where(key, "in", value));
+          } else if (typeof value === "object" && value !== null) {
+            // Handle range queries (e.g., { age: { operator: ">=", value: 25 } })
+            queryFilters.push(where(key, value.operator, value.value));
+          } else {
+            // Standard equality filter
+            queryFilters.push(where(key, "==", value));
+          }
+        }
+      });
+      q = query(
+        collection(db, "products"),
+        ...queryFilters,
+        where("productState", "==", "on sale"),
+        orderBy("createdAt", "desc")
+      );
+    } else {
+      q = query(
+        collection(db, "products"),
+        where("productState", "==", "on sale"),
+        orderBy("createdAt", "desc")
+      );
+    }
+    const querySnapshot = await getDocs(q);
+
+    const products = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    console.log(products);
+    return {
+      ok: true,
+      message: "Products on sale retrieved successfully!",
+      products,
+    };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return {
+      ok: false,
+      message: "There was an error trying to delete the document",
+      products: [],
+    };
+  }
+}
+
+export async function getProductsByCategory(status: string) {
   try {
     const q = query(
       collection(db, "products"),
-      where("productState", "==", status)
+      where("productCategory", "==", status),
+      where("productState", "==", "on sale")
     );
     const querySnapshot = await getDocs(q);
 
