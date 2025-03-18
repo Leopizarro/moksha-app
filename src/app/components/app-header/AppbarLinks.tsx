@@ -75,7 +75,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (/* props */) => {
                 fontSize: "16px",
               }}
             >
-              Mandalas Moksha
+              Moksha Creaciones
             </Link>
           </Box>
         </Grid>

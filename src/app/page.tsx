@@ -43,7 +43,7 @@ export default async function Home(props: {
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">
-        <Grid2 size={12}>
+        <Grid2 size={12} overflow="scroll">
           <Banner />
         </Grid2>
         <Grid2
