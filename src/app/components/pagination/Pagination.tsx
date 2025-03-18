@@ -4,13 +4,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface CustomPaginationInterface {
   count: number;
-  page: number;
 }
 
-export default function CustomPagination({
-  count,
-  page,
-}: CustomPaginationInterface) {
+export default function CustomPagination({ count }: CustomPaginationInterface) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();

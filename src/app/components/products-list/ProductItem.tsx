@@ -22,6 +22,7 @@ import { useState } from "react";
 import { deleteDocFromCollection } from "@/app/lib/firestore";
 import { deleteAllFilesFromFolder } from "@/app/lib/storage";
 import GenericSnackbar from "../common/alert/GenericSnackbar";
+import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
 
 interface ProductItemInterface {
   product: ProductInterface;
@@ -29,9 +30,9 @@ interface ProductItemInterface {
 
 const ProductItem: React.FC<ProductItemInterface> = (props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [alertObject, setAlertObject] = useState({
+  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
     open: false,
-    severity: "",
+    severity: "success",
     message: "",
   });
   const { data: session } = useSession();
@@ -39,7 +40,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
   const router = useRouter();
 
   const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "", message: "" });
+    setAlertObject({ open: false, severity: "success", message: "" });
   };
 
   async function handleDeleteProduct(productId: string) {

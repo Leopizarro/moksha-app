@@ -22,12 +22,14 @@ export default async function EditProduct({ params }: EditProductInterface) {
       </Grid2>
       <CardContent>
         <Grid2 container alignContent="center" justifyContent="center">
-          <UploadForm
-            productCategories={productCategories.docs}
-            productStates={productStates.docs}
-            product={data}
-            isEdit
-          />
+          {productCategories.docs && productStates.docs && (
+            <UploadForm
+              productCategories={productCategories.docs}
+              productStates={productStates.docs}
+              product={data}
+              isEdit
+            />
+          )}
         </Grid2>
       </CardContent>
     </Card>

@@ -25,7 +25,10 @@ export default async function Home(props: {
   );
   const productCategories = JSON.parse(
     JSON.stringify(productCategoriesData.docs)
-  ) as object[];
+  ) as {
+    id: string;
+    name: string;
+  }[];
 
   const query = {
     productCategory: productCategoryQuery,
@@ -73,7 +76,7 @@ export default async function Home(props: {
           </Suspense>
         </Grid2>
         <Grid2 size={12} justifyContent="center" display="flex">
-          <CustomPagination count={totalPages} page={2} />
+          <CustomPagination count={totalPages} />
         </Grid2>
       </Grid2>
     </main>
