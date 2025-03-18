@@ -1,11 +1,14 @@
 "use server";
 
 import Banner from "./components/banner/Banner";
+import CustomPagination from "./components/pagination/Pagination";
 import ProductFilers from "./components/product-filters/ProductFilters";
 import ProductsList from "./components/products-list/ProductsList";
-import { getDocsFromCollection } from "./lib/firestore";
+import getCountOfQuery, { getDocsFromCollection } from "./lib/firestore";
 import styles from "./page.module.css";
 import { Grid2 } from "@mui/material";
+
+const PAGE_SIZE = 12;
 
 export default async function Home(props: {
   searchParams?: Promise<{
@@ -25,9 +28,15 @@ export default async function Home(props: {
 
   const query = {
     productCategory: productCategoryQuery,
-    /* page: currentPage, */
   };
 
+  const totalProductsData = await getCountOfQuery(query);
+  const totalPages =
+    totalProductsData?.count > PAGE_SIZE
+      ? Math.floor(totalProductsData?.count / PAGE_SIZE) +
+        (totalProductsData.count % PAGE_SIZE > 0 ? 1 : 0)
+      : 1;
+  console.log("pagecount", totalPages, totalProductsData?.count);
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">
@@ -43,15 +52,22 @@ export default async function Home(props: {
           <Grid2
             size={12}
             display="flex"
-            justifyContent="end"
-            margin="0px 30px"
+            justifyContent="center"
+            margin="0px 15px"
           >
             <ProductFilers
               options={productCategories}
               field="productCategory"
             />
           </Grid2>
-          <ProductsList query={query} currentPage={currentPage} />
+          <ProductsList
+            query={query}
+            currentPage={currentPage}
+            maxPageSize={PAGE_SIZE}
+          />
+        </Grid2>
+        <Grid2 size={12} justifyContent="center" display="flex">
+          <CustomPagination count={totalPages} page={2} />
         </Grid2>
       </Grid2>
     </main>

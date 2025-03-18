@@ -19,6 +19,7 @@ export default function ProductFilers({ options, field }: FilterInterface) {
   function handleOnChange(value: string) {
     setOptionSelected(value);
     const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
     if (value) {
       params.set(field, value);
     } else {
@@ -28,7 +29,10 @@ export default function ProductFilers({ options, field }: FilterInterface) {
   }
 
   return (
-    <FormControl size="small" sx={{ width: "230px", margin: "10px 8px" }}>
+    <FormControl
+      size="small"
+      sx={{ width: "230px", margin: "20px 8px 0px 8px" }}
+    >
       <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
       <Select
         labelId="demo-simple-select-label"
