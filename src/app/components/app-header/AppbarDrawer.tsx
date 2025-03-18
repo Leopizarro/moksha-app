@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Drawer,
   List,
   ListItemButton,
@@ -28,19 +29,39 @@ export default function AppbarDrawer({
 }: DrawerInterface) {
   return (
     <Drawer anchor="left" open={openDrawer} onClose={handleCloseDrawer}>
-      <Box width="250px" height="100%">
+      <Box width="250px" height="100%" marginTop="20px">
         <List sx={{ height: "100%" }}>
           {linkList?.length > 0 &&
-            linkList.map((link) =>
+            linkList.map((link, index) =>
               link.redirectTo ? (
-                <Link
-                  href={link.redirectTo}
-                  key={link.buttonText}
-                  style={{ textDecoration: "none", color: "black" }}
-                  onClick={handleCloseDrawer}
-                >
+                <>
+                  <Divider component="li" key={link.buttonText} />
+                  <Link
+                    href={link.redirectTo}
+                    style={{ textDecoration: "none", color: "black" }}
+                    onClick={handleCloseDrawer}
+                  >
+                    <ListItemButton
+                      sx={
+                        link.bottom
+                          ? {
+                              position: "absolute",
+                              bottom: "8%",
+                              width: "100%",
+                            }
+                          : {}
+                      }
+                    >
+                      <ListItemIcon>{link.linkIcon}</ListItemIcon>
+                      <ListItemText primary={`${link.buttonText}`} />
+                    </ListItemButton>
+                  </Link>
+                </>
+              ) : (
+                <>
                   <ListItemButton
                     key={link.buttonText}
+                    onClick={link?.buttonAction}
                     sx={
                       link.bottom
                         ? { position: "absolute", bottom: "8%", width: "100%" }
@@ -48,24 +69,12 @@ export default function AppbarDrawer({
                     }
                   >
                     <ListItemIcon>{link.linkIcon}</ListItemIcon>
-                    <ListItemText primary={`${link.buttonText}`} />
+                    <ListItemText primary={link.buttonText} />
                   </ListItemButton>
-                </Link>
-              ) : (
-                <ListItemButton
-                  key={link.buttonText}
-                  onClick={link?.buttonAction}
-                  sx={
-                    link.bottom
-                      ? { position: "absolute", bottom: "8%", width: "100%" }
-                      : {}
-                  }
-                >
-                  <ListItemIcon>{link.linkIcon}</ListItemIcon>
-                  <ListItemText primary={link.buttonText} />
-                </ListItemButton>
+                </>
               )
             )}
+          <Divider />
         </List>
       </Box>
     </Drawer>
