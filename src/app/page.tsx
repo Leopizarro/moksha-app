@@ -40,7 +40,6 @@ export default async function Home(props: {
       ? Math.floor(totalProductsData?.count / PAGE_SIZE) +
         (totalProductsData.count % PAGE_SIZE > 0 ? 1 : 0)
       : 1;
-  console.log("pagecount", totalPages, totalProductsData?.count);
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">

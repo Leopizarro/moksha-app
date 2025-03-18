@@ -56,13 +56,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
   return (
     <Toolbar className={classes.toolbar}>
       <Grid container justifyContent="center">
-        <Grid
-          item
-          xs={session ? 5 : 5}
-          sm={4}
-          md={3}
-          sx={{ display: "inline-flex" }}
-        >
+        <Grid item xs={12} sx={{ display: "inline-flex" }}>
           {session && (
             <IconButton
               onClick={() => setOpenDrawer((prev) => !prev)}
@@ -97,7 +91,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
             </Link>
           </Box>
         </Grid>
-        <Grid item xs={session ? 7 : 7} sm={8} md={9}>
+        {/* <Grid item xs={session ? 7 : 7} sm={8} md={9}>
           <Grid container justifyContent="right">
             {menuOptions.map((linkObject: menuOptionsInterface, i: number) => (
               <div style={{ display: "flex" }} key={i}>
@@ -135,7 +129,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
               </div>
             ))}
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
       <AppbarDrawer
         openDrawer={openDrawer}
