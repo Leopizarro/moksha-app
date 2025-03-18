@@ -1,19 +1,7 @@
 "use client";
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  IconButton,
-  Link,
-  Toolbar,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import { usePathname } from "next/navigation";
+import { Box, Grid, IconButton, Link, Toolbar } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
 import React, { useState } from "react";
-import { menuOptionsInterface } from "../../interfaces/app-header/appHeader.interface";
 import classes from "./appbar.module.css";
 import Image from "next/image";
 import mmLogo from "../../../../public/mm-app-logo.jpg";
@@ -46,13 +34,13 @@ const drawerLinks = [
   },
 ];
 
-const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
+const AppHeaderLink: React.FC<AppBarInterface> = (/* props */) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { data: session } = useSession();
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
-  const { menuOptions } = props;
-  const pathname = usePathname();
+  /* const theme = useTheme(); */
+  /* const isXs = useMediaQuery(theme.breakpoints.down("sm")); */
+  /* const { menuOptions } = props;
+  const pathname = usePathname(); */
   return (
     <Toolbar className={classes.toolbar}>
       <Grid container justifyContent="center">
