@@ -6,14 +6,19 @@ import { getProductsByFilters } from "@/app/lib/firestore";
 interface ProductListInterface {
   query: object;
   currentPage: number;
+  maxPageSize: number;
 }
 
 const ProductsList: React.FC<ProductListInterface> = async ({
   query,
   currentPage,
+  maxPageSize,
 }) => {
-  console.log("props of list->", query, currentPage);
-  const productsData = await getProductsByFilters(query);
+  const productsData = await getProductsByFilters(
+    query,
+    currentPage,
+    maxPageSize
+  );
   const products = JSON.parse(
     JSON.stringify(productsData.products)
   ) as ProductInterface[];
