@@ -10,14 +10,20 @@ import {
   limit,
   orderBy,
   query,
+  QueryFieldFilterConstraint,
   setDoc,
   startAfter,
   Timestamp,
   where,
 } from "firebase/firestore";
-import { ProductInterface } from "../interfaces/products.interface";
+import {
+  NewProductInterface,
+  ProductInterface,
+} from "../interfaces/products.interface";
 
-export const addProductToCollection = async (productInfo: ProductInterface) => {
+export const addProductToCollection = async (
+  productInfo: NewProductInterface
+) => {
   try {
     const newProduct = await addDoc(collection(db, "products"), {
       ...productInfo,
@@ -48,7 +54,7 @@ export const getDocsFromCollection = async (collectionName: string) => {
     const docsData = docs.docs.map((item) => ({ id: item.id, ...item.data() }));
     return {
       ok: true,
-      docs: docsData,
+      docs: docsData as { id: string; name: string }[],
     };
   } catch (error) {
     console.log(error);
@@ -115,9 +121,12 @@ export async function updateDocFromCollection(
   try {
     const docRef = doc(db, collection, id);
     await setDoc(docRef, data, { merge: true });
+    const docSnap = await getDoc(docRef);
+    const productUpdated = { id, ...docSnap.data() };
     return {
       ok: true,
       message: `Document with id ${id} was updated!`,
+      product: productUpdated,
     };
   } catch (error) {
     console.log(error);
@@ -146,14 +155,14 @@ export async function deleteDocFromCollection(collection: string, id: string) {
 }
 
 export async function getProductsByFilters(
+  maxPageSize: number,
   filters?: object,
-  currentPage?: number,
-  maxPageSize?: number
+  currentPage?: number
 ) {
   try {
     let q;
     if (filters) {
-      const queryFilters = [];
+      const queryFilters: QueryFieldFilterConstraint[] = [];
       Object.entries(filters)?.forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {
@@ -253,7 +262,7 @@ export default async function getCountOfQuery(filters?: object) {
   try {
     let q;
     if (filters) {
-      const queryFilters = [];
+      const queryFilters: QueryFieldFilterConstraint[] = [];
       Object.entries(filters)?.forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {

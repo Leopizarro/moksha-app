@@ -19,13 +19,17 @@ import {
   addProductToCollection,
   updateDocFromCollection,
 } from "@/app/lib/firestore";
-import { ProductInterface } from "@/app/interfaces/products.interface";
+import {
+  NewProductInterface,
+  ProductInterface,
+} from "@/app/interfaces/products.interface";
+import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
 
 interface UploadFormProps {
   productCategories: { name: string }[];
   productStates: { name: string }[];
-  isEdit: boolean;
-  product: ProductInterface;
+  isEdit?: boolean;
+  product?: ProductInterface;
 }
 
 const UploadForm: React.FC<UploadFormProps> = ({
@@ -34,7 +38,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
   isEdit = false,
   product,
 }: UploadFormProps) => {
-  const [newProductData, setNewProductData] = useState({
+  const [newProductData, setNewProductData] = useState<NewProductInterface>({
     title: "",
     description: "",
     price: 0,
@@ -57,9 +61,9 @@ const UploadForm: React.FC<UploadFormProps> = ({
   const [statusMessage, setStatusMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [alertObject, setAlertObject] = useState({
+  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
     open: false,
-    severity: "",
+    severity: "success",
     message: "",
   });
 
@@ -88,7 +92,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
   };
 
   const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "", message: "" });
+    setAlertObject({ open: false, severity: "success", message: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -98,23 +102,23 @@ const UploadForm: React.FC<UploadFormProps> = ({
     // Do all the image upload and product upload
     try {
       let newProductRes;
-      if (!isEdit) {
-        newProductRes = await addProductToCollection(newProductData);
-      } else {
+      if (isEdit && product) {
         newProductRes = await updateDocFromCollection(
           "products",
           product.id,
           newProductData
         );
+      } else {
+        newProductRes = await addProductToCollection(newProductData);
       }
-      if (newProductRes.ok && file) {
-        if (isEdit) {
+      if (newProductRes.ok && file && newProductRes.product) {
+        if (isEdit && product) {
           await deleteAllFilesFromFolder(`images/${product.id}`);
           await deleteAllFilesFromFolder(`thumbnails/${product.id}`);
         }
         const imageUrls = await uploadFile(
           file,
-          isEdit ? product.id : newProductRes.product.id
+          isEdit && product ? product.id : newProductRes.product.id
         );
         if (!imageUrls.imageUrl || !imageUrls.thumbnailImageUrl) {
           setStatusMessage("ERROR!");
@@ -127,7 +131,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
         }
         const updateResponse = await updateDocFromCollection(
           "products",
-          isEdit ? product.id : newProductRes.product.id,
+          isEdit && product ? product.id : newProductRes.product.id,
           imageUrls
         );
         if (!updateResponse?.ok) {
@@ -275,7 +279,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
             <Image
               alt="preview-image"
               fill
-              src={previewUrl || product.thumbnailImageUrl}
+              src={previewUrl ?? product?.thumbnailImageUrl ?? ""}
               style={{
                 objectFit: "contain", // cover, contain, none
               }}

@@ -15,9 +15,9 @@ const ProductsList: React.FC<ProductListInterface> = async ({
   maxPageSize,
 }) => {
   const productsData = await getProductsByFilters(
+    maxPageSize,
     query,
-    currentPage,
-    maxPageSize
+    currentPage
   );
   const products = JSON.parse(
     JSON.stringify(productsData.products)

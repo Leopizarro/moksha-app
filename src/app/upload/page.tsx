@@ -23,10 +23,12 @@ export default async function CreatePostForm() {
         </Grid2>
         <CardContent>
           <Grid2 container alignContent="center" justifyContent="center">
-            <UploadForm
-              productCategories={productCategories.docs}
-              productStates={productStates.docs}
-            />
+            {productCategories.docs && productStates.docs && (
+              <UploadForm
+                productCategories={productCategories.docs}
+                productStates={productStates.docs}
+              />
+            )}
           </Grid2>
         </CardContent>
       </Card>

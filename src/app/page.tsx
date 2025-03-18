@@ -25,7 +25,10 @@ export default async function Home(props: {
   );
   const productCategories = JSON.parse(
     JSON.stringify(productCategoriesData.docs)
-  ) as object[];
+  ) as {
+    id: string;
+    name: string;
+  }[];
 
   const query = {
     productCategory: productCategoryQuery,
