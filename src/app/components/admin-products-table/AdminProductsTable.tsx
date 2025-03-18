@@ -36,16 +36,20 @@ export default function AdminProductsTable({
     id: string;
     title: string;
   } | null>(null);
-  const [alertObject, setAlertObject] = useState({
+  const [alertObject, setAlertObject] = useState<{
+    open: boolean;
+    severity: "success" | "error" | "info" | "warning";
+    message: string;
+  }>({
     open: false,
-    severity: "",
+    severity: "success",
     message: "",
   });
 
   const router = useRouter();
 
   const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "", message: "" });
+    setAlertObject({ open: false, severity: "success", message: "" });
   };
 
   async function deleteProduct(productId: string) {
@@ -186,7 +190,9 @@ export default function AdminProductsTable({
         openModal={openModal}
         dialogMessage={`¿Estás seguro de eliminar el producto: ${selectedProduct?.title}?`}
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}
-        handleConfirm={() => deleteProduct(selectedProduct?.id)}
+        handleConfirm={() =>
+          deleteProduct(selectedProduct ? selectedProduct.id : "")
+        }
       />
       <GenericSnackbar
         open={alertObject?.open}
