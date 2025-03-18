@@ -29,11 +29,12 @@ const ProductsList: React.FC<ProductListInterface> = async ({
       sx={{
         justifyContent: "space-around",
         alignItems: "center",
-        margin: "25px 8px",
+        padding: "25px 8px",
         width: "100%",
       }}
       rowGap="25px"
       spacing={1}
+      overflow="scroll"
     >
       {products.length > 0 ? (
         products?.map((product, index: number) => (

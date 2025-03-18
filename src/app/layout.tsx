@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mandalas Moksha - Manualidades",
+  title: "Moksha Creaciones - Sitio Web",
   description: "Vitrina online de productos",
 };
 

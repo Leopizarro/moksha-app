@@ -1,19 +1,7 @@
 "use client";
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  IconButton,
-  Link,
-  Toolbar,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import { usePathname } from "next/navigation";
+import { Box, Grid, IconButton, Link, Toolbar } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
 import React, { useState } from "react";
-import { menuOptionsInterface } from "../../interfaces/app-header/appHeader.interface";
 import classes from "./appbar.module.css";
 import Image from "next/image";
 import mmLogo from "../../../../public/mm-app-logo.jpg";
@@ -46,23 +34,17 @@ const drawerLinks = [
   },
 ];
 
-const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
+const AppHeaderLink: React.FC<AppBarInterface> = (/* props */) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { data: session } = useSession();
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
-  const { menuOptions } = props;
-  const pathname = usePathname();
+  /* const theme = useTheme(); */
+  /* const isXs = useMediaQuery(theme.breakpoints.down("sm")); */
+  /* const { menuOptions } = props;
+  const pathname = usePathname(); */
   return (
     <Toolbar className={classes.toolbar}>
       <Grid container justifyContent="center">
-        <Grid
-          item
-          xs={session ? 5 : 5}
-          sm={4}
-          md={3}
-          sx={{ display: "inline-flex" }}
-        >
+        <Grid item xs={12} sx={{ display: "inline-flex" }}>
           {session && (
             <IconButton
               onClick={() => setOpenDrawer((prev) => !prev)}
@@ -97,7 +79,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
             </Link>
           </Box>
         </Grid>
-        <Grid item xs={session ? 7 : 7} sm={8} md={9}>
+        {/* <Grid item xs={session ? 7 : 7} sm={8} md={9}>
           <Grid container justifyContent="right">
             {menuOptions.map((linkObject: menuOptionsInterface, i: number) => (
               <div style={{ display: "flex" }} key={i}>
@@ -135,7 +117,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (props) => {
               </div>
             ))}
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
       <AppbarDrawer
         openDrawer={openDrawer}
