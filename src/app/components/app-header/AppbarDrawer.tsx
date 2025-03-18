@@ -18,7 +18,7 @@ interface DrawerInterface {
     linkIcon: JSX.Element;
     redirectTo?: string;
     bottom?: boolean;
-    buttonAction?: () => any;
+    buttonAction?: () => void;
   }[];
 }
 

@@ -94,6 +94,7 @@ export async function deleteAllFilesFromFolder(folderPath: string) {
       message: "folder deleted!",
     };
   } catch (error) {
+    console.log(error);
     return {
       ok: false,
       message: "there was an error trying to delete the folder",

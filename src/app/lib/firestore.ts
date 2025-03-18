@@ -4,13 +4,11 @@ import {
   collection,
   deleteDoc,
   doc,
-  DocumentData,
   getCountFromServer,
   getDoc,
   getDocs,
   limit,
   orderBy,
-  Query,
   query,
   setDoc,
   startAfter,
@@ -155,7 +153,7 @@ export async function getProductsByFilters(
   try {
     let q;
     if (filters) {
-      let queryFilters = [];
+      const queryFilters = [];
       Object.entries(filters)?.forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {
@@ -255,7 +253,7 @@ export default async function getCountOfQuery(filters?: object) {
   try {
     let q;
     if (filters) {
-      let queryFilters = [];
+      const queryFilters = [];
       Object.entries(filters)?.forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {

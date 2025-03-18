@@ -1,13 +1,6 @@
 import { verifyPassword } from "../../../lib/auth";
 import { db } from "../../../fireBaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -22,8 +15,8 @@ const authConfig: NextAuthOptions = {
           email: string;
           password: string;
         };
-        const q = query(collection(db, "users"), where("email", "==", email));
-        const querySnapshot = await getDocs(q);
+        /* const q = query(collection(db, "users"), where("email", "==", email));
+        const querySnapshot = await getDocs(q); */
         const docRef = await doc(db, "users", "wbkP0Io4IT4RMc8mdAso");
         const docSnap = await getDoc(docRef);
         const adminUser = docSnap.data();
