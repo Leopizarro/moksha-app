@@ -293,7 +293,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
           disabled={buttonDisabled}
           aria-disabled={buttonDisabled}
         >
-          Post
+          {isEdit ? "Actualizar" : "Crear"}
         </Button>
       </FormControl>
       <GenericSnackbar

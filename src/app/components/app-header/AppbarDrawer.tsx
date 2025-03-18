@@ -32,46 +32,43 @@ export default function AppbarDrawer({
       <Box width="250px" height="100%" marginTop="20px">
         <List sx={{ height: "100%" }}>
           {linkList?.length > 0 &&
-            linkList.map((link, index) =>
+            linkList.map((link) =>
               link.redirectTo ? (
-                <>
-                  <Divider component="li" key={link.buttonText} />
-                  <Link
-                    href={link.redirectTo}
-                    style={{ textDecoration: "none", color: "black" }}
-                    onClick={handleCloseDrawer}
-                  >
-                    <ListItemButton
-                      sx={
-                        link.bottom
-                          ? {
-                              position: "absolute",
-                              bottom: "8%",
-                              width: "100%",
-                            }
-                          : {}
-                      }
-                    >
-                      <ListItemIcon>{link.linkIcon}</ListItemIcon>
-                      <ListItemText primary={`${link.buttonText}`} />
-                    </ListItemButton>
-                  </Link>
-                </>
-              ) : (
-                <>
+                <Link
+                  href={link.redirectTo}
+                  style={{ textDecoration: "none", color: "black" }}
+                  onClick={handleCloseDrawer}
+                  key={`${link.buttonText}-link`}
+                >
+                  <Divider component="li" />
                   <ListItemButton
-                    key={link.buttonText}
-                    onClick={link?.buttonAction}
                     sx={
                       link.bottom
-                        ? { position: "absolute", bottom: "8%", width: "100%" }
+                        ? {
+                            position: "absolute",
+                            bottom: "8%",
+                            width: "100%",
+                          }
                         : {}
                     }
                   >
                     <ListItemIcon>{link.linkIcon}</ListItemIcon>
-                    <ListItemText primary={link.buttonText} />
+                    <ListItemText primary={`${link.buttonText}`} />
                   </ListItemButton>
-                </>
+                </Link>
+              ) : (
+                <ListItemButton
+                  key={link.buttonText}
+                  onClick={link?.buttonAction}
+                  sx={
+                    link.bottom
+                      ? { position: "absolute", bottom: "8%", width: "100%" }
+                      : {}
+                  }
+                >
+                  <ListItemIcon>{link.linkIcon}</ListItemIcon>
+                  <ListItemText primary={link.buttonText} />
+                </ListItemButton>
               )
             )}
           <Divider />

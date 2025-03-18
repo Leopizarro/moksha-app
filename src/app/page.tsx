@@ -1,12 +1,13 @@
 "use server";
 
+import { Suspense } from "react";
 import Banner from "./components/banner/Banner";
 import CustomPagination from "./components/pagination/Pagination";
 import ProductFilers from "./components/product-filters/ProductFilters";
 import ProductsList from "./components/products-list/ProductsList";
 import getCountOfQuery, { getDocsFromCollection } from "./lib/firestore";
 import styles from "./page.module.css";
-import { Grid2 } from "@mui/material";
+import { CircularProgress, Grid2 } from "@mui/material";
 
 const PAGE_SIZE = 12;
 
@@ -60,11 +61,16 @@ export default async function Home(props: {
               field="productCategory"
             />
           </Grid2>
-          <ProductsList
-            query={query}
-            currentPage={currentPage}
-            maxPageSize={PAGE_SIZE}
-          />
+          <Suspense
+            key={"test"}
+            fallback={<CircularProgress sx={{ margin: "20px 15px" }} />}
+          >
+            <ProductsList
+              query={query}
+              currentPage={currentPage}
+              maxPageSize={PAGE_SIZE}
+            />
+          </Suspense>
         </Grid2>
         <Grid2 size={12} justifyContent="center" display="flex">
           <CustomPagination count={totalPages} page={2} />
