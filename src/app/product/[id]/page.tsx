@@ -17,7 +17,9 @@ export async function generateMetadata({
   const product = await getOneDocFromCollection(productId, "products");
 
   return {
-    title: `${product ? product?.title : "No encontrado"} - Mandalas Moksha`,
+    title: `${product ? product?.title : "No encontrado"} - ${
+      process.env.NEXT_PUBLIC_STORE_NAME
+    }`,
     openGraph: {
       images: [product ? product?.thumbnailImageUrl : ""],
     },

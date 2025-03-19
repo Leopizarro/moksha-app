@@ -4,7 +4,7 @@ import { getDocsFromCollection } from "../lib/firestore";
 
 export const metadata = {
   title: "Upload a new product",
-  description: "Mandalas Moksha",
+  description: process.env.NEXT_PUBLIC_STORE_NAME,
 };
 export default async function CreatePostForm() {
   const productCategories = await getDocsFromCollection("product_categories");

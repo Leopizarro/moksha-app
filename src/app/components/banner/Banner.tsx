@@ -37,7 +37,7 @@ const Banner: React.FC = () => {
         className={styles.glowingTextBlack}
         component="h1"
       >
-        Moksha Creaciones
+        {process.env.NEXT_PUBLIC_STORE_NAME}
       </Typography>
       <Typography
         sx={{
