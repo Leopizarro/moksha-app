@@ -41,7 +41,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
   const [newProductData, setNewProductData] = useState<NewProductInterface>({
     title: "",
     description: "",
-    price: 0,
+    price: "",
     productCategory: "",
     productState: "",
   });
@@ -71,6 +71,10 @@ const UploadForm: React.FC<UploadFormProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   function handleFormChange(value: string | number, field: string) {
+    console.log(value, field);
+    if (field === "price" && Number(value) <= 0) {
+      value = "";
+    }
     setNewProductData((prev) => ({
       ...prev,
       [field]: value,
@@ -161,7 +165,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
   const buttonDisabled =
     newProductData.title.length < 1 ||
     newProductData.description.length < 1 ||
-    newProductData.price < 1 ||
+    Number(newProductData.price) < 1 ||
     !newProductData.productCategory ||
     !newProductData.productState ||
     (isEdit ? false : !file) ||
@@ -236,7 +240,6 @@ const UploadForm: React.FC<UploadFormProps> = ({
             required
             fullWidth
             value={newProductData.price}
-            inputProps={{ "data-testid": "Price" }}
             onChange={(e) => handleFormChange(Number(e.target.value), "price")}
           />
         </FormControl>
