@@ -15,7 +15,7 @@ export interface ProductInterface {
 export interface NewProductInterface {
   title: string;
   description: string;
-  price: number;
+  price: number | "";
   productCategory: string;
   productState: string;
 }
