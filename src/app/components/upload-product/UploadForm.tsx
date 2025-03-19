@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import GenericSnackbar from "../common/alert/GenericSnackbar";
 import { deleteAllFilesFromFolder, uploadFile } from "@/app/lib/storage";
 import {
@@ -24,6 +24,7 @@ import {
   ProductInterface,
 } from "@/app/interfaces/products.interface";
 import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
+import { clientResizeImage } from "@/app/lib/utils";
 
 interface UploadFormProps {
   productCategories: { name: string }[];
@@ -60,6 +61,10 @@ const UploadForm: React.FC<UploadFormProps> = ({
 
   const [statusMessage, setStatusMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({
+    error: false,
+    message: "",
+  });
 
   const [alertObject, setAlertObject] = useState<SnackbarInterface>({
     open: false,
@@ -71,7 +76,6 @@ const UploadForm: React.FC<UploadFormProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   function handleFormChange(value: string | number, field: string) {
-    console.log(value, field);
     if (field === "price" && Number(value) <= 0) {
       value = "";
     }
@@ -83,16 +87,32 @@ const UploadForm: React.FC<UploadFormProps> = ({
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
-    setFile(file);
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
+    if (file && file.type !== "image/jpeg") {
+      setFile(null);
+      setPreviewUrl(null);
+      setError({
+        error: true,
+        message: "Sólo se aceptan imágenes jpg/jpeg",
+      });
+      return;
     }
     if (file) {
-      const url = URL.createObjectURL(file);
+      setError({
+        error: false,
+        message: "",
+      });
+      setFile(file);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      const resizedImage = await clientResizeImage(file, 1024, 1024);
+      const url = URL.createObjectURL(resizedImage);
+      setFile(resizedImage);
       setPreviewUrl(url);
-    } else {
-      setPreviewUrl(null);
+      return;
     }
+    setFile(null);
+    setPreviewUrl(null);
   };
 
   const handleCloseAlert = () => {
@@ -169,6 +189,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
     !newProductData.productCategory ||
     !newProductData.productState ||
     (isEdit ? false : !file) ||
+    error?.error ||
     loading;
 
   return (
@@ -276,10 +297,13 @@ const UploadForm: React.FC<UploadFormProps> = ({
             onChange={handleFileChange}
             required={!isEdit}
           />
+          {error?.error && (
+            <Typography color="red">{error?.message ?? "error"}</Typography>
+          )}
         </FormControl>
         {(previewUrl || product?.thumbnailImageUrl) && (
           <Grid2 size={12} sx={{ height: "240px", position: "relative" }}>
-            <Image
+            <NextImage
               alt="preview-image"
               fill
               src={previewUrl ?? product?.thumbnailImageUrl ?? ""}

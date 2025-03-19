@@ -1,4 +1,3 @@
-"use server";
 import {
   ref,
   uploadBytesResumable,
@@ -22,7 +21,7 @@ export async function uploadFile(
   const storageRef = ref(storage, `images/${id}/${file.name}`);
   const thumbnailStorageRef = ref(storage, `thumbnails/${id}/${file.name}`);
 
-  const fullImage = await resizeImage(file, 1200);
+  const fullImage = await resizeImage(file, 1024);
   const imageUrl = await uploadImageToStorage(
     new Uint8Array(fullImage),
     storageRef
