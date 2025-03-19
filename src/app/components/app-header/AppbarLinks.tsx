@@ -75,7 +75,7 @@ const AppHeaderLink: React.FC<AppBarInterface> = (/* props */) => {
                 fontSize: "16px",
               }}
             >
-              Moksha Creaciones
+              {process.env.NEXT_PUBLIC_STORE_NAME}
             </Link>
           </Box>
         </Grid>

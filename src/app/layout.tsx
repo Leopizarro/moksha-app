@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Moksha Creaciones - Sitio Web",
+  title: `${process.env.NEXT_PUBLIC_STORE_NAME} - Sitio Web`,
   description: "Vitrina online de productos",
 };
 
