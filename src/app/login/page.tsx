@@ -4,7 +4,7 @@ import React, { Suspense } from "react";
 
 export const metadata = {
   title: `Login - ${process.env.NEXT_PUBLIC_STORE_NAME}`,
-  description: "Simple photo gallery created with NextJs",
+  description: `Iniciar sesión en ${process.env.NEXT_PUBLIC_STORE_NAME}`,
 };
 
 const Login: React.FC = () => {
