@@ -111,7 +111,7 @@ export default function AdminProductsTable({
                     <TableCell align="right">
                       {formatToCLP(row.price)}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="right" suppressHydrationWarning>
                       {new Date(row.createdAt.seconds * 1000).toDateString()}
                     </TableCell>
                     <TableCell>
