@@ -11,6 +11,7 @@ import {
   orderBy,
   query,
   QueryFieldFilterConstraint,
+  QueryOrderByConstraint,
   setDoc,
   startAfter,
   Timestamp,
@@ -25,9 +26,16 @@ export const addProductToCollection = async (
   productInfo: NewProductInterface
 ) => {
   try {
-    const newProduct = await addDoc(collection(db, "products"), {
+    const data = {
       ...productInfo,
       createdAt: Timestamp.now(),
+      soldAt:
+        productInfo.productState?.toLowerCase() === "sold"
+          ? Timestamp.fromDate(new Date())
+          : null,
+    };
+    const newProduct = await addDoc(collection(db, "products"), {
+      ...data,
     });
     if (newProduct?.id) {
       const docSnap = await getDoc(newProduct);
@@ -116,10 +124,15 @@ export const addUserToCollection = async (userInfo: {
 export async function updateDocFromCollection(
   collection: string,
   id: string,
-  data: object
+  data: NewProductInterface
 ) {
   try {
     const docRef = doc(db, collection, id);
+    if (data?.productState === "sold") {
+      data = { ...data, soldAt: Timestamp.now() };
+    } else if (data?.productState) {
+      data = { ...data, soldAt: null };
+    }
     await setDoc(docRef, data, { merge: true });
     const docSnap = await getDoc(docRef);
     const productUpdated = { id, ...docSnap.data() };
@@ -162,15 +175,26 @@ export async function getProductsByFilters(
   try {
     let q;
     if (filters) {
-      const queryFilters: QueryFieldFilterConstraint[] = [];
+      const queryFilters: (
+        | QueryFieldFilterConstraint
+        | QueryOrderByConstraint
+      )[] = [];
       Object.entries(filters)?.forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {
             // Use 'in' for multiple values
             queryFilters.push(where(key, "in", value));
           } else if (typeof value === "object" && value !== null) {
-            // Handle range queries (e.g., { age: { operator: ">=", value: 25 } })
-            queryFilters.push(where(key, value.operator, value.value));
+            // if operator is orderBy, makes the query orderBy('createdAt', 'desc') for example
+            if (
+              value.operator === "orderBy" &&
+              (value.value === "desc" || value.value === "asc")
+            ) {
+              queryFilters.push(orderBy(key, value.value));
+            } else {
+              // Handle range queries (e.g., { age: { operator: ">=", value: 25 } })
+              queryFilters.push(where(key, value.operator, value.value));
+            }
           } else {
             // Standard equality filter
             queryFilters.push(where(key, "==", value));
@@ -180,8 +204,7 @@ export async function getProductsByFilters(
       q = query(
         collection(db, "products"),
         ...queryFilters,
-        where("productState", "==", "on sale"),
-        orderBy("createdAt", "desc"),
+        /* orderBy("createdAt", "desc"), */
         limit(maxPageSize)
       );
     } else {
@@ -262,15 +285,26 @@ export default async function getCountOfQuery(filters?: object) {
   try {
     let q;
     if (filters) {
-      const queryFilters: QueryFieldFilterConstraint[] = [];
+      const queryFilters: (
+        | QueryFieldFilterConstraint
+        | QueryOrderByConstraint
+      )[] = [];
       Object.entries(filters)?.forEach(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {
             // Use 'in' for multiple values
             queryFilters.push(where(key, "in", value));
           } else if (typeof value === "object" && value !== null) {
-            // Handle range queries (e.g., { age: { operator: ">=", value: 25 } })
-            queryFilters.push(where(key, value.operator, value.value));
+            // if operator is orderBy, makes the query orderBy('createdAt', 'desc') for example
+            if (
+              value.operator === "orderBy" &&
+              (value.value === "desc" || value.value === "asc")
+            ) {
+              queryFilters.push(orderBy(key, value.value));
+            } else {
+              // Handle range queries (e.g., { age: { operator: ">=", value: 25 } })
+              queryFilters.push(where(key, value.operator, value.value));
+            }
           } else {
             // Standard equality filter
             queryFilters.push(where(key, "==", value));
@@ -280,8 +314,8 @@ export default async function getCountOfQuery(filters?: object) {
       q = query(
         collection(db, "products"),
         ...queryFilters,
-        where("productState", "==", "on sale"),
-        orderBy("createdAt", "desc")
+        where("productState", "==", "on sale")
+        /* orderBy("createdAt", "desc") */
       );
     } else {
       q = query(

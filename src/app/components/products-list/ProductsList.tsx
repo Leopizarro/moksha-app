@@ -16,7 +16,7 @@ const ProductsList: React.FC<ProductListInterface> = async ({
 }) => {
   const productsData = await getProductsByFilters(
     maxPageSize,
-    query,
+    { productState: "on sale", ...query },
     currentPage
   );
   const products = JSON.parse(
@@ -29,8 +29,8 @@ const ProductsList: React.FC<ProductListInterface> = async ({
       sx={{
         justifyContent: "space-around",
         alignItems: "center",
-        padding: "25px 8px",
         width: "100%",
+        padding: "15px 0px",
       }}
       rowGap="25px"
       spacing={1}

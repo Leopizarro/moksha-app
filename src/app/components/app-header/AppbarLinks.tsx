@@ -37,10 +37,6 @@ const drawerLinks = [
 const AppHeaderLink: React.FC<AppBarInterface> = (/* props */) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { data: session } = useSession();
-  /* const theme = useTheme(); */
-  /* const isXs = useMediaQuery(theme.breakpoints.down("sm")); */
-  /* const { menuOptions } = props;
-  const pathname = usePathname(); */
   return (
     <Toolbar className={classes.toolbar}>
       <Grid container justifyContent="center">

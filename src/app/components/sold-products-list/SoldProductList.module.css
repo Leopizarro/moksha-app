@@ -1,0 +1,9 @@
+.grow {
+  transition: all 0.2s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.63) 0px 2px 7px;
+}
+
+.grow:hover {
+  transform: scale(1.01);
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 2px 7px;
+}

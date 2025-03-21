@@ -72,17 +72,17 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
           className={classes.grow}
           sx={{
             cursor: "pointer",
-            width: "370px",
+            width: "340px",
             justifySelf: "center",
             boxShadow:
-              "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+              "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 12px 0 rgba(0, 0, 0, 0.19)",
           }}
         >
           <CardContent sx={{ padding: 0, paddingBottom: 0 }}>
             <Box
               sx={{
                 position: "relative",
-                minHeight: { xs: "370px", sm: "370px" },
+                minHeight: { xs: "340px" },
               }}
             >
               {session && (
@@ -148,7 +148,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                 fill
                 sizes="35vw"
                 style={{
-                  objectFit: "contain",
+                  objectFit: "cover",
                 }}
               />
             </Box>

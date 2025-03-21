@@ -39,7 +39,13 @@ const UploadForm: React.FC<UploadFormProps> = ({
   isEdit = false,
   product,
 }: UploadFormProps) => {
-  const [newProductData, setNewProductData] = useState<NewProductInterface>({
+  const [newProductData, setNewProductData] = useState<{
+    title: string;
+    description: string;
+    price: number | "";
+    productCategory: string;
+    productState: string;
+  }>({
     title: "",
     description: "",
     price: "",
@@ -156,7 +162,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
         const updateResponse = await updateDocFromCollection(
           "products",
           isEdit && product ? product.id : newProductRes.product.id,
-          imageUrls
+          imageUrls as NewProductInterface
         );
         if (!updateResponse?.ok) {
           throw new Error("There was an error updating the information");
@@ -183,8 +189,8 @@ const UploadForm: React.FC<UploadFormProps> = ({
   };
 
   const buttonDisabled =
-    newProductData.title.length < 1 ||
-    newProductData.description.length < 1 ||
+    newProductData?.title?.length < 1 ||
+    newProductData?.description?.length < 1 ||
     Number(newProductData.price) < 1 ||
     !newProductData.productCategory ||
     !newProductData.productState ||
