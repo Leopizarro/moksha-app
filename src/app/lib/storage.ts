@@ -21,13 +21,13 @@ export async function uploadFile(
   const storageRef = ref(storage, `images/${id}/${file.name}`);
   const thumbnailStorageRef = ref(storage, `thumbnails/${id}/${file.name}`);
 
-  const fullImage = await resizeImage(file, 1024);
+  const fullImage = await resizeImage(file, 900);
   const imageUrl = await uploadImageToStorage(
     new Uint8Array(fullImage),
     storageRef
   );
 
-  const thumbnailImage = await resizeImage(file, 300);
+  const thumbnailImage = await resizeImage(file, 340);
   const thumbnailImageUrl = await uploadImageToStorage(
     new Uint8Array(thumbnailImage),
     thumbnailStorageRef

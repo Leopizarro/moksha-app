@@ -23,11 +23,16 @@ export default function ProductInfoBox({ product }: ProductInfoBoxInterface) {
         </Typography>
       </Box>
       <Typography fontSize="2.4rem" fontWeight="bold" margin="10px 0px">
-        {formatToCLP(product.price)}
+        {product.productState === "on sale"
+          ? formatToCLP(product.price)
+          : "PRODUCTO VENDIDO"}
       </Typography>
       <Box width="100%">
         <Typography align="center">
-          ¿Te interesa el prouducto? ¡Contáctame por whatsapp!
+          {product.productState === "on sale"
+            ? "¿Te interesa el prouducto?"
+            : "¿Te interesa el producto y deseas uno con diseño similar?"}{" "}
+          ¡Contáctame por whatsapp!
         </Typography>
         <Link
           href={`https://wa.me/${process.env.NEXT_PUBLIC_OWNERS_PHONE}?text=¡Hola!%2C%20Me%20interesa%20el%20producto%3A%20${product.title}.`}

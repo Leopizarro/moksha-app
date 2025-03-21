@@ -53,10 +53,21 @@ export default async function ProductDetails({
             position="relative"
             sx={{
               boxShadow:
-                "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                "0 4px 10px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.29)",
               aspectRatio: "1/1",
+              overflow: "hidden",
             }}
           >
+            <Image
+              src={product.thumbnailImageUrl}
+              alt="Background"
+              fill // Fills entire box
+              style={{
+                filter: "blur(30px)", // Blurred effect
+                objectFit: "cover",
+                opacity: 0.77, // Dim the background
+              }}
+            />
             <Image
               alt="product-image"
               src={product.imageUrl}

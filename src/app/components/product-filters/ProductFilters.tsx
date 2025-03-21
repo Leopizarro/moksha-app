@@ -8,7 +8,7 @@ interface FilterInterface {
   field: string;
 }
 
-export default function ProductFilers({ options, field }: FilterInterface) {
+export default function ProductFilters({ options, field }: FilterInterface) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -29,10 +29,7 @@ export default function ProductFilers({ options, field }: FilterInterface) {
   }
 
   return (
-    <FormControl
-      size="small"
-      sx={{ width: "230px", margin: "20px 8px 0px 8px" }}
-    >
+    <FormControl size="small" sx={{ width: "230px", background: "white" }}>
       <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
       <Select
         labelId="demo-simple-select-label"

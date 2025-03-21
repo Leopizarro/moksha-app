@@ -13,9 +13,13 @@ export interface ProductInterface {
 }
 
 export interface NewProductInterface {
-  title: string;
-  description: string;
-  price: number | "";
-  productCategory: string;
-  productState: string;
+  title?: string;
+  description?: string;
+  price?: number | "";
+  productCategory?: string;
+  productState?: string;
+  soldAt?: Timestamp | null;
+  createdAt?: Timestamp;
+  imageUrl?: string;
+  thumbnailImageUrl?: string;
 }
