@@ -34,7 +34,6 @@ const ProductsList: React.FC<ProductListInterface> = async ({
       }}
       rowGap="25px"
       spacing={1}
-      overflow="scroll"
     >
       {products.length > 0 ? (
         products?.map((product, index: number) => (

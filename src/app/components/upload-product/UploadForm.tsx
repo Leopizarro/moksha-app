@@ -25,6 +25,7 @@ import {
 } from "@/app/interfaces/products.interface";
 import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
 import { clientResizeImage } from "@/app/lib/utils";
+import { convertFileToJpg } from "@/app/lib/heic-convert";
 
 interface UploadFormProps {
   productCategories: { name: string }[];
@@ -78,7 +79,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
     message: "",
   });
 
-  const [file, setFile] = useState<File | null>(null);
+  const [newFile, setNewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   function handleFormChange(value: string | number, field: string) {
@@ -92,13 +93,13 @@ const UploadForm: React.FC<UploadFormProps> = ({
   }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    if (file && file.type !== "image/jpeg") {
-      setFile(null);
+    let file = e.target.files?.[0] ?? null;
+    if (file && file.type !== "image/jpeg" && file.type !== "image/heic") {
+      setNewFile(null);
       setPreviewUrl(null);
       setError({
         error: true,
-        message: "Sólo se aceptan imágenes jpg/jpeg",
+        message: "Sólo se aceptan imágenes formato jpg/jpeg y HEIC",
       });
       return;
     }
@@ -107,17 +108,33 @@ const UploadForm: React.FC<UploadFormProps> = ({
         error: false,
         message: "",
       });
-      setFile(file);
+      if (file.type === "image/heic") {
+        const convertedBlob = await convertFileToJpg(file);
+        const convertedBlobing = new Blob([convertedBlob], {
+          type: "image/jpeg",
+        });
+        file = new File(
+          [convertedBlobing],
+          file.name.replace(/\.heic$/i, ".jpg"),
+          {
+            type: "image/jpeg",
+          }
+        );
+      }
+      setNewFile(file);
+
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
       const resizedImage = await clientResizeImage(file, 1024, 1024);
+
       const url = URL.createObjectURL(resizedImage);
-      setFile(resizedImage);
+      setNewFile(resizedImage);
       setPreviewUrl(url);
+
       return;
     }
-    setFile(null);
+    setNewFile(null);
     setPreviewUrl(null);
   };
 
@@ -141,13 +158,13 @@ const UploadForm: React.FC<UploadFormProps> = ({
       } else {
         newProductRes = await addProductToCollection(newProductData);
       }
-      if (newProductRes.ok && file && newProductRes.product) {
+      if (newProductRes.ok && newFile && newProductRes.product) {
         if (isEdit && product) {
           await deleteAllFilesFromFolder(`images/${product.id}`);
           await deleteAllFilesFromFolder(`thumbnails/${product.id}`);
         }
         const imageUrls = await uploadFile(
-          file,
+          newFile,
           isEdit && product ? product.id : newProductRes.product.id
         );
         if (!imageUrls.imageUrl || !imageUrls.thumbnailImageUrl) {
@@ -194,7 +211,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
     Number(newProductData.price) < 1 ||
     !newProductData.productCategory ||
     !newProductData.productState ||
-    (isEdit ? false : !file) ||
+    (isEdit ? false : !newFile) ||
     error?.error ||
     loading;
 
@@ -298,7 +315,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
           <input
             name="media"
             type="file"
-            accept="image/jpeg"
+            accept=".heic, .heif, image/heic, image/heif, image/jpeg"
             data-testid="file-input"
             onChange={handleFileChange}
             required={!isEdit}

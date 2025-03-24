@@ -53,11 +53,7 @@ export default async function Home(props: {
   return (
     <main className={styles.page}>
       <Grid2 container size={12} direction="column" margin="30px 0px">
-        <Grid2
-          size={12}
-          overflow="scroll"
-          sx={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}
-        >
+        <Grid2 size={12} sx={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
           <Banner />
         </Grid2>
         <Grid2
@@ -72,7 +68,6 @@ export default async function Home(props: {
             display={"flex"}
             flexDirection={"column"}
             sx={{
-              /* overflowX: "scroll", */
               margin: "10px 0px 0px 0px",
               padding: "8px 5px",
               background: "white",

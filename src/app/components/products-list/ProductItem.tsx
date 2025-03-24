@@ -67,9 +67,12 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
 
   return (
     <>
-      <Link href={`/product/${product.id}`} style={{ textDecoration: "none" }}>
+      <Link
+        className={classes.grow}
+        href={`/product/${product.id}`}
+        style={{ textDecoration: "none" }}
+      >
         <Card
-          className={classes.grow}
           sx={{
             cursor: "pointer",
             width: "340px",
@@ -162,7 +165,10 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                 textAlign="center"
                 sx={{ fontSize: "12px", color: "gray" }}
               >
-                {firstLetterUpperCase(product?.productCategory)}
+                {product?.productCategory
+                  ?.split("/")
+                  .map((item) => firstLetterUpperCase(item))
+                  .join("/")}
               </Divider>
               <Typography variant="h6" component="div">
                 {product?.title.toUpperCase()}
