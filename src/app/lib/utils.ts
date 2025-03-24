@@ -15,6 +15,17 @@ export function formatToCLP(number: number) {
   }).format(number);
 }
 
+export function orderObjectsArrayByStrings<T extends Record<string, string>>(
+  array: T[],
+  key: keyof T,
+  direction: "asc" | "desc"
+) {
+  if (direction === "desc") {
+    return array.sort((a, b) => a[key].localeCompare(b[key]));
+  }
+  return array.sort((a, b) => b[key].localeCompare(a[key]));
+}
+
 export const clientResizeImage = (
   file: File,
   maxWidth: number,

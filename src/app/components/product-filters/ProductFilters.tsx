@@ -1,4 +1,5 @@
 "use client";
+import { orderObjectsArrayByStrings } from "@/app/lib/utils";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +16,9 @@ export default function ProductFilters({ options, field }: FilterInterface) {
   const [optionSelected, setOptionSelected] = useState(
     searchParams.get(field)?.toString() ?? ""
   );
+  let orderedOptions: { id: string; name: string }[] = [];
+  if (options)
+    orderedOptions = orderObjectsArrayByStrings(options, "name", "desc");
 
   function handleOnChange(value: string) {
     setOptionSelected(value);
@@ -41,7 +45,7 @@ export default function ProductFilters({ options, field }: FilterInterface) {
         <MenuItem key={"empty-option"} value={""}>
           {"TODOS"}
         </MenuItem>
-        {options.map((item) => (
+        {orderedOptions?.map((item) => (
           <MenuItem key={item.name} value={item.name}>
             {item.name.toUpperCase()}
           </MenuItem>
