@@ -8,7 +8,7 @@ export async function convertFileToJpg(file: File): Promise<ArrayBuffer> {
   const outputBuffer = await convert({
     buffer,
     format: "JPEG",
-    quality: 1, // Adjust quality (0-1)
+    quality: 0.55, // Adjust quality (0-1)
   });
   return outputBuffer;
 }
