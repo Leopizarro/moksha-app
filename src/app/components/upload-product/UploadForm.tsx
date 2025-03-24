@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -24,7 +24,7 @@ import {
   ProductInterface,
 } from "@/app/interfaces/products.interface";
 import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
-import { clientResizeImage } from "@/app/lib/utils";
+import { clientResizeImage, orderObjectsArrayByStrings } from "@/app/lib/utils";
 import { convertFileToJpg } from "@/app/lib/heic-convert";
 
 interface UploadFormProps {
@@ -54,6 +54,8 @@ const UploadForm: React.FC<UploadFormProps> = ({
     productState: "",
   });
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (product) {
       setNewProductData({
@@ -81,6 +83,31 @@ const UploadForm: React.FC<UploadFormProps> = ({
 
   const [newFile, setNewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const orderedCategories = orderObjectsArrayByStrings(
+    productCategories,
+    "name",
+    "desc"
+  );
+
+  const orderedStates = orderObjectsArrayByStrings(
+    productStates,
+    "name",
+    "desc"
+  );
+
+  function clearForm(): void {
+    setNewProductData({
+      title: "",
+      description: "",
+      price: "",
+      productCategory: "",
+      productState: "",
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setPreviewUrl(null);
+    setNewFile(null);
+  }
 
   function handleFormChange(value: string | number, field: string) {
     if (field === "price" && Number(value) <= 0) {
@@ -196,6 +223,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
         severity: "success",
         message: "Product uploaded successfully!",
       });
+      clearForm();
       return;
     } catch (error) {
       console.log(error);
@@ -273,7 +301,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
             }
             required
           >
-            {productCategories.map((item) => (
+            {orderedCategories?.map((item) => (
               <MenuItem key={item.name} value={item.name}>
                 {item.name.toUpperCase()}
               </MenuItem>
@@ -307,7 +335,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
             onChange={(e) => handleFormChange(e.target.value, "productState")}
             required
           >
-            {productStates.map((item) => (
+            {orderedStates?.map((item) => (
               <MenuItem key={item.name} value={item.name}>
                 {item.name.toUpperCase()}
               </MenuItem>
@@ -317,6 +345,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
 
         <FormControl fullWidth>
           <input
+            ref={fileInputRef}
             name="media"
             type="file"
             accept=".heic, .heif, image/heic, image/heif, image/jpeg"
