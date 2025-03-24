@@ -109,7 +109,11 @@ const UploadForm: React.FC<UploadFormProps> = ({
         message: "",
       });
       if (file.type === "image/heic") {
+        console.log("starting timer");
+        console.time("testing");
         const convertedBlob = await convertFileToJpg(file);
+        console.timeEnd("testing");
+        console.log("expired timer");
         const convertedBlobing = new Blob([convertedBlob], {
           type: "image/jpeg",
         });
