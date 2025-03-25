@@ -1,9 +1,7 @@
 import { ProductInterface } from "@/app/interfaces/products.interface";
 import { getProductsByFilters } from "@/app/lib/firestore";
-import Image from "next/image";
-import { Box, Typography } from "@mui/material";
-import Link from "next/link";
-import classes from "./SoldProductList.module.css";
+import { Typography } from "@mui/material";
+import ImageSlider from "./ImageSlider";
 
 export default async function SoldProductsList() {
   const soldProductsData = await getProductsByFilters(
@@ -29,38 +27,7 @@ export default async function SoldProductsList() {
           >
             Vendidos Recientemente
           </Typography>
-          <Box
-            sx={{
-              maxWidth: "100%", // Limit container width
-              margin: "0px auto", // Center the container itself
-              overflowX: "auto", // Allow horizontal scrolling
-              display: "flex",
-              justifyContent: "flex-start", // Align items to the start
-              gap: 2, // Space between images
-              padding: "10px 6px",
-              whiteSpace: "nowrap", // Prevent images from wrapping
-              "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar (optional)
-            }}
-          >
-            {soldProducts.map((soldProduct) => (
-              <Box key={soldProduct.title}>
-                <Link href={`/product/${soldProduct.id}`}>
-                  <Image
-                    alt="test"
-                    src={soldProduct.thumbnailImageUrl}
-                    height={200}
-                    width={200}
-                    className={classes.grow}
-                    style={{
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Link>
-              </Box>
-            ))}
-          </Box>
+          <ImageSlider items={soldProducts} />
         </>
       )}
     </>
