@@ -128,8 +128,8 @@ export default async function Home(props: {
             />
           </Grid2>
           <Suspense
-            key={"test"}
-            fallback={<CircularProgress sx={{ margin: "20px 15px" }} />}
+            key={"totalProductsData"}
+            fallback={<CircularProgress sx={{ margin: "20px auto" }} />}
           >
             <ProductsList
               query={query}
