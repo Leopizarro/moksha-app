@@ -3,14 +3,17 @@ import { getProductsByFilters } from "@/app/lib/firestore";
 import { Typography } from "@mui/material";
 import ImageSlider from "./ImageSlider";
 
+const MAX_PAGE_SIZE = 8; // it will fetch only 8 items
+const CURRENT_PAGE = 1; // this is to get always the first 'page' (latest products)
+
 export default async function SoldProductsList() {
   const soldProductsData = await getProductsByFilters(
-    8,
+    MAX_PAGE_SIZE,
     {
       productState: "sold",
       soldAt: { operator: "orderBy", value: "desc" },
     },
-    1
+    CURRENT_PAGE
   );
   const soldProducts = JSON.parse(
     JSON.stringify(soldProductsData.products)
