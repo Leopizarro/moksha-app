@@ -340,3 +340,34 @@ export default async function getCountOfQuery(filters?: object) {
     };
   }
 }
+
+// CORE FIRESTORE FUNCTIONS (CRUD)
+export const createDocument = async (collectionName: string, data: object) => {
+  const ref = doc(collection(db, collectionName));
+  await setDoc(ref, { ...data, id: ref.id });
+  return ref.id;
+};
+
+export const getDocument = async (path: string, id: string) => {
+  const ref = doc(db, path, id);
+  const snapshot = await getDoc(ref);
+  return snapshot.exists() ? snapshot.data() : null;
+};
+
+export const getDocumentByKeyValue = async (
+  collectionName: string,
+  key: string,
+  value: string
+) => {
+  const q = query(collection(db, collectionName), where(key, "==", value));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) return null; // No document found
+
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })); // Returns an array of matched documents
+};
+
+export const deleteDocument = async (path: string, id: string) => {
+  const ref = doc(db, path, id);
+  await deleteDoc(ref);
+};

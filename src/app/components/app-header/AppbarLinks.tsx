@@ -18,12 +18,17 @@ const aleo = Aleo({ subsets: ["latin"] });
 const drawerLinks = [
   {
     buttonText: "Productos",
-    redirectTo: "/admin",
+    redirectTo: "/admin/products",
     linkIcon: <FormatListBulletedIcon />,
   },
   {
     buttonText: "Añadir producto",
     redirectTo: "/upload",
+    linkIcon: <AddIcon />,
+  },
+  {
+    buttonText: "Añadir categoría",
+    redirectTo: "/admin/categories",
     linkIcon: <AddIcon />,
   },
   {

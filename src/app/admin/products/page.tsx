@@ -1,6 +1,6 @@
-import AdminProductsTable from "../components/admin-products-table/AdminProductsTable";
-import { ProductInterface } from "../interfaces/products.interface";
-import { getDocsFromCollection } from "../lib/firestore";
+import AdminProductsTable from "../../components/admin-products-table/AdminProductsTable";
+import { ProductInterface } from "../../interfaces/products.interface";
+import { getDocsFromCollection } from "../../lib/firestore";
 
 export const dynamic = "force-dynamic";
 
