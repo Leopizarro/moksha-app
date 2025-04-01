@@ -3,6 +3,7 @@ import { getOneDocFromCollection } from "@/app/lib/firestore";
 import { Box, Typography } from "@mui/material";
 import { Metadata } from "next";
 import Image from "next/image";
+import classes from "./page.module.css";
 
 interface ProductDetailsInterface {
   params: Promise<{ id: string }>;
@@ -51,6 +52,7 @@ export default async function ProductDetails({
             minHeight={{ xs: "auto", md: "60vh", xl: "900px" }}
             minWidth={{ xs: "100%", sm: "600px", xl: "900px" }}
             position="relative"
+            className={classes["image-container"]}
             sx={{
               boxShadow:
                 "0 4px 10px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.29)",
