@@ -63,7 +63,13 @@ export default function ImageSlider({ items }: ImageSliderInterface) {
         }}
       >
         {items.map((item) => (
-          <Box key={item.title} ref={scrollRef}>
+          <Box
+            key={item.title}
+            ref={scrollRef}
+            className={classes["image-container"]}
+            width={200}
+            height={200}
+          >
             <Link href={`/product/${item.id}`}>
               <Image
                 alt="test"

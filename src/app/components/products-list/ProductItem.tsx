@@ -83,6 +83,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
         >
           <CardContent sx={{ padding: 0, paddingBottom: 0 }}>
             <Box
+              className={classes["image-container"]}
               sx={{
                 position: "relative",
                 minHeight: { xs: "340px" },

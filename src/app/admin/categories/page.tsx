@@ -4,6 +4,11 @@ import { getDocsFromCollection } from "@/app/lib/firestore";
 import { orderObjectsArrayByStrings } from "@/app/lib/utils";
 import { Box, Typography } from "@mui/material";
 
+export const metadata = {
+  title: `Categorías - ${process.env.NEXT_PUBLIC_STORE_NAME}`,
+  description: `Admin page - ${process.env.NEXT_PUBLIC_STORE_NAME}`,
+};
+
 export default async function ProductCategories() {
   const categories = await getDocsFromCollection("product_categories");
   let orderedCategories: { name: string; id: string }[] = [];

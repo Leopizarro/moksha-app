@@ -12,6 +12,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { AppBarInterface } from "../../interfaces/banner.interface";
 import MenuIcon from "@mui/icons-material/Menu";
 import AppbarDrawer from "./AppbarDrawer";
+import SellIcon from "@mui/icons-material/Sell";
 
 const aleo = Aleo({ subsets: ["latin"] });
 
@@ -27,9 +28,9 @@ const drawerLinks = [
     linkIcon: <AddIcon />,
   },
   {
-    buttonText: "Añadir categoría",
+    buttonText: "Categorías Productos",
     redirectTo: "/admin/categories",
-    linkIcon: <AddIcon />,
+    linkIcon: <SellIcon />,
   },
   {
     buttonText: "Cerrar Sesión",

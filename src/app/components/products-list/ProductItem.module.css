@@ -3,6 +3,12 @@
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.14), 0 4px 8px 0 rgba(0, 0, 0, 0.3);
 }
 
+.image-container {
+  background-color: #dcdcdc;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 5px 5px;
+}
+
 .grow:hover {
   transform: scale(1.02);
 }
