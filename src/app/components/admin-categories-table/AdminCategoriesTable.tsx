@@ -12,26 +12,22 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ProductInterface } from "@/app/interfaces/products.interface";
-import { formatToCLP } from "@/app/lib/utils";
-import Link from "next/link";
 import Modal from "../modal/Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteDocFromCollection } from "@/app/lib/firestore";
-import { deleteAllFilesFromFolder } from "@/app/lib/storage";
 import GenericSnackbar from "../common/alert/GenericSnackbar";
 import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
+import { firstLetterUpperCase } from "@/app/lib/utils";
 
-interface AdminProductsTableInterface {
-  products: ProductInterface[];
+interface AdminCategoriesTableInterface {
+  productCategories: { id: string; name: string }[];
 }
 
-export default function AdminProductsTable({
-  products,
-}: AdminProductsTableInterface) {
+export default function AdminCategoriesTable({
+  productCategories,
+}: AdminCategoriesTableInterface) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<{
     id: string;
@@ -49,24 +45,22 @@ export default function AdminProductsTable({
     setAlertObject({ open: false, severity: "success", message: "" });
   };
 
-  async function deleteProduct(productId: string) {
+  async function deleteCategory(categoryId: string) {
     try {
-      await deleteDocFromCollection("products", productId);
-      await deleteAllFilesFromFolder(`images/${productId}`);
-      await deleteAllFilesFromFolder(`thumbnails/${productId}`);
+      await deleteDocFromCollection("product_categories", categoryId);
       setOpenModal(false);
       router.refresh(); // revalidate cache and update UI
       setAlertObject({
         open: true,
         severity: "success",
-        message: "Producto borrado exitosamente",
+        message: "Categoría borrada exitosamente",
       });
     } catch (error) {
       console.log(error);
       setAlertObject({
         open: true,
         severity: "error",
-        message: "Hubo un error intentando borrar el producto",
+        message: "Hubo un error intentando borrar la categoría",
       });
     }
   }
@@ -80,49 +74,55 @@ export default function AdminProductsTable({
   }
   return (
     <>
-      {products?.length > 0 ? (
+      {productCategories?.length > 0 ? (
         <TableContainer
           component={Paper}
-          sx={{ maxWidth: "1200px", justifySelf: "center", margin: "20px" }}
+          sx={{
+            maxWidth: "350px",
+            maxHeight: "600px",
+            justifySelf: "center",
+            margin: "20px",
+          }}
         >
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+          <Table sx={{ minWidth: 250 }} aria-label="simple table" stickyHeader>
+            <TableHead sx={{ background: "white" }}>
               <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell align="right">Tipo</TableCell>
-                <TableCell align="right">Estado</TableCell>
-                <TableCell align="right">Precio</TableCell>
-                <TableCell align="right">Fecha creación</TableCell>
-                <TableCell align="right">Acciones</TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: "bold", zIndex: 11 }}
+                >
+                  Nombre
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: "bold", zIndex: 11 }}
+                >
+                  Acciones
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {products?.length > 0 &&
-                products?.map((row, index) => (
+              {productCategories?.length > 0 &&
+                productCategories?.map((row, index) => (
                   <TableRow
-                    key={`${row.title}-${index}`}
+                    key={`${row.name}-${index}`}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row">
-                      {row.title}
-                    </TableCell>
-                    <TableCell align="right">{row.productCategory}</TableCell>
-                    <TableCell align="right">{row.productState}</TableCell>
-                    <TableCell align="right">
-                      {formatToCLP(row.price)}
-                    </TableCell>
-                    <TableCell align="right" suppressHydrationWarning>
-                      {new Date(row.createdAt.seconds * 1000).toDateString()}
+                    <TableCell component="th" scope="row" align="center">
+                      {row.name
+                        .split("/")
+                        .map((word) => firstLetterUpperCase(word))
+                        .join("/")}
                     </TableCell>
                     <TableCell>
                       {
                         <Box
                           display="flex"
                           gap={1}
-                          alignSelf="right"
-                          justifySelf="right"
+                          alignSelf="center"
+                          justifySelf="center"
                         >
-                          <Link href={`/edit/${row.id}`}>
+                          {/* <Link href={`/edit/${row.id}`}>
                             <Tooltip title="Editar">
                               <IconButton
                                 disabled={openModal}
@@ -143,7 +143,7 @@ export default function AdminProductsTable({
                                 <EditIcon fontSize="inherit" />
                               </IconButton>
                             </Tooltip>
-                          </Link>
+                          </Link> */}
                           <Tooltip title="Eliminar">
                             <IconButton
                               aria-label="delete"
@@ -152,7 +152,7 @@ export default function AdminProductsTable({
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                handleClickDelete(row.id, row.title);
+                                handleClickDelete(row.id, row.name);
                               }}
                               sx={{
                                 postion: "absolute",
@@ -188,7 +188,7 @@ export default function AdminProductsTable({
         dialogMessage={`¿Estás seguro de eliminar el producto: ${selectedProduct?.title}?`}
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}
         handleConfirm={() =>
-          deleteProduct(selectedProduct ? selectedProduct.id : "")
+          deleteCategory(selectedProduct ? selectedProduct.id : "")
         }
       />
       <GenericSnackbar
