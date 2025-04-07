@@ -21,8 +21,7 @@ import Modal from "../modal/Modal";
 import { useState } from "react";
 import { deleteDocFromCollection } from "@/app/lib/firestore";
 import { deleteAllFilesFromFolder } from "@/app/lib/storage";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 interface ProductItemInterface {
   product: ProductInterface;
@@ -30,18 +29,10 @@ interface ProductItemInterface {
 
 const ProductItem: React.FC<ProductItemInterface> = (props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
   const { data: session } = useSession();
   const { product } = props;
   const router = useRouter();
-
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
-  };
 
   async function handleDeleteProduct(productId: string) {
     try {
@@ -187,12 +178,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}
         handleConfirm={() => handleDeleteProduct(product.id)}
       />
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </>
   );
 };

@@ -17,9 +17,8 @@ import Modal from "../modal/Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteDocFromCollection } from "@/app/lib/firestore";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
 import { firstLetterUpperCase } from "@/app/lib/utils";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 interface AdminCategoriesTableInterface {
   productCategories: { id: string; name: string }[];
@@ -33,17 +32,9 @@ export default function AdminCategoriesTable({
     id: string;
     title: string;
   } | null>(null);
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
 
   const router = useRouter();
-
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
-  };
 
   async function deleteCategory(categoryId: string) {
     try {
@@ -185,18 +176,13 @@ export default function AdminCategoriesTable({
       )}
       <Modal
         openModal={openModal}
-        dialogMessage={`¿Estás seguro de eliminar el producto: ${selectedProduct?.title}?`}
+        dialogMessage={`¿Estás seguro de eliminar la cetogría: ${selectedProduct?.title}?`}
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}
         handleConfirm={() =>
           deleteCategory(selectedProduct ? selectedProduct.id : "")
         }
       />
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </>
   );
 }

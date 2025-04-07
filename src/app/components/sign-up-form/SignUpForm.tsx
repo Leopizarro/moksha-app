@@ -2,21 +2,12 @@
 import { createUser } from "../../lib/auth";
 import { Button, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 const SignUpForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
-
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
-  };
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -62,12 +53,7 @@ const SignUpForm: React.FC = () => {
           Crear usuario
         </Button>
       </Grid>
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </form>
   );
 };
