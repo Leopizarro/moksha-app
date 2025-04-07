@@ -1,14 +1,13 @@
+import { useState } from "react";
+import { SnackbarInterface } from "../interfaces/genericSnackbar.interface";
 import { Alert, Snackbar, SnackbarCloseReason } from "@mui/material";
 
-interface GenericSnackbarInterface {
-  open: boolean;
-  handleCloseAlert: () => void;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-}
-
-const GenericSnackbar: React.FC<GenericSnackbarInterface> = (props) => {
-  const { open, handleCloseAlert, message, severity } = props;
+export function useSnackbar() {
+  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
 
   const handleClose = (
     event: React.SyntheticEvent | Event,
@@ -18,12 +17,12 @@ const GenericSnackbar: React.FC<GenericSnackbarInterface> = (props) => {
       return;
     }
 
-    handleCloseAlert();
+    setAlertObject((prev) => ({ ...prev, open: false }));
   };
 
-  return (
+  const SnackbarComponent = (
     <Snackbar
-      open={open}
+      open={alertObject.open}
       autoHideDuration={5000}
       onClose={handleClose}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -31,15 +30,14 @@ const GenericSnackbar: React.FC<GenericSnackbarInterface> = (props) => {
     >
       <Alert
         onClose={handleClose}
-        severity={severity}
+        severity={alertObject.severity}
         variant="filled"
         sx={{ width: "100%" }}
         data-testid="alert"
       >
-        {message}
+        {alertObject.message}
       </Alert>
     </Snackbar>
   );
-};
-
-export default GenericSnackbar;
+  return { setAlertObject, SnackbarComponent };
+}

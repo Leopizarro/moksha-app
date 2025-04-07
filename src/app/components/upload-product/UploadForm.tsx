@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import NextImage from "next/image";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
 import { deleteAllFilesFromFolder, uploadFile } from "@/app/lib/storage";
 import {
   addProductToCollection,
@@ -23,9 +22,9 @@ import {
   NewProductInterface,
   ProductInterface,
 } from "@/app/interfaces/products.interface";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
 import { clientResizeImage, orderObjectsArrayByStrings } from "@/app/lib/utils";
 import { convertFileToJpg } from "@/app/lib/heic-convert";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 interface UploadFormProps {
   productCategories: { name: string }[];
@@ -75,11 +74,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
     message: "",
   });
 
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
 
   const [newFile, setNewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -167,10 +162,6 @@ const UploadForm: React.FC<UploadFormProps> = ({
     }
     setNewFile(null);
     setPreviewUrl(null);
-  };
-
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -383,12 +374,7 @@ const UploadForm: React.FC<UploadFormProps> = ({
           {isEdit ? "Actualizar" : "Crear"}
         </Button>
       </FormControl>
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </form>
   );
 };

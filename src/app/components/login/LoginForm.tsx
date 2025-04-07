@@ -3,8 +3,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -12,15 +11,7 @@ const LoginForm: React.FC = () => {
   const callbackQueryParam = searchParams.get("callbackUrl");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
-
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
-  };
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
 
   const handleLogin = async (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -79,12 +70,7 @@ const LoginForm: React.FC = () => {
           </Button>
         </Grid>
       </Grid>
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </form>
   );
 };

@@ -22,8 +22,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteDocFromCollection } from "@/app/lib/firestore";
 import { deleteAllFilesFromFolder } from "@/app/lib/storage";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 interface AdminProductsTableInterface {
   products: ProductInterface[];
@@ -37,17 +36,9 @@ export default function AdminProductsTable({
     id: string;
     title: string;
   } | null>(null);
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
 
   const router = useRouter();
-
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
-  };
 
   async function deleteProduct(productId: string) {
     try {
@@ -191,12 +182,7 @@ export default function AdminProductsTable({
           deleteProduct(selectedProduct ? selectedProduct.id : "")
         }
       />
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </>
   );
 }

@@ -1,18 +1,13 @@
 "use client";
-import { SnackbarInterface } from "@/app/interfaces/genericSnackbar.interface";
 import { createNewProductCategory } from "@/app/lib/actions";
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
-import GenericSnackbar from "../common/alert/GenericSnackbar";
 import { useRouter } from "next/navigation";
+import { useSnackbar } from "@/app/hooks/useSnackbar";
 
 export default function NewCategoryInput() {
   const [newCategory, setNewCategory] = useState<string | "">("");
-  const [alertObject, setAlertObject] = useState<SnackbarInterface>({
-    open: false,
-    severity: "success",
-    message: "",
-  });
+  const { setAlertObject, SnackbarComponent } = useSnackbar();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -43,9 +38,6 @@ export default function NewCategoryInput() {
     }
   };
 
-  const handleCloseAlert = () => {
-    setAlertObject({ open: false, severity: "success", message: "" });
-  };
   return (
     <>
       <TextField
@@ -63,12 +55,7 @@ export default function NewCategoryInput() {
       >
         Crear
       </Button>
-      <GenericSnackbar
-        open={alertObject?.open}
-        handleCloseAlert={handleCloseAlert}
-        message={alertObject?.message}
-        severity={alertObject?.severity}
-      />
+      {SnackbarComponent}
     </>
   );
 }
