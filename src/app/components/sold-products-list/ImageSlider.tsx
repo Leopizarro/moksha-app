@@ -62,31 +62,34 @@ export default function ImageSlider({ items }: ImageSliderInterface) {
           scrollBehavior: "smooth",
         }}
       >
-        {items.map((item) => (
-          <Box
-            key={item.title}
-            ref={scrollRef}
-            className={classes["image-container"]}
-            width={200}
-            height={200}
-          >
-            <Link href={`/product/${item.id}`}>
-              <Image
-                alt="test"
-                src={item.thumbnailImageUrl}
-                height={200}
+        {items.map(
+          (item, index) =>
+            item.thumbnailImageUrl && (
+              <Box
+                key={`${item.title} + ${index}`}
+                ref={scrollRef}
+                className={classes["image-container"]}
                 width={200}
-                draggable={false}
-                className={classes.grow}
-                style={{
-                  borderRadius: "10px",
-                  cursor: "pointer",
-                  objectFit: "cover",
-                }}
-              />
-            </Link>
-          </Box>
-        ))}
+                height={200}
+              >
+                <Link href={`/product/${item.id}`}>
+                  <Image
+                    alt="test"
+                    src={item.thumbnailImageUrl}
+                    height={200}
+                    width={200}
+                    draggable={false}
+                    className={classes.grow}
+                    style={{
+                      borderRadius: "10px",
+                      cursor: "pointer",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Link>
+              </Box>
+            )
+        )}
       </Box>
       {!isMobile && (
         <IconButton
