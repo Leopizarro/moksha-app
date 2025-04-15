@@ -1,5 +1,7 @@
 import {
+  Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -8,6 +10,7 @@ import {
 } from "@mui/material";
 
 interface ModalInterface {
+  isLoading?: boolean;
   openModal: boolean;
   handleCancel: () => void;
   handleConfirm: () => void;
@@ -15,6 +18,7 @@ interface ModalInterface {
 }
 
 export default function Modal({
+  isLoading,
   openModal,
   handleCancel,
   handleConfirm,
@@ -33,11 +37,20 @@ export default function Modal({
       <DialogContent dividers>
         <Typography>{dialogMessage}</Typography>
       </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={handleCancel}>
-          Cancelar
-        </Button>
-        <Button onClick={handleConfirm}>Confirmar</Button>
+      <DialogActions sx={{ justifyContent: isLoading ? "center" : "end" }}>
+        {!isLoading && (
+          <>
+            <Button autoFocus onClick={handleCancel}>
+              Cancelar
+            </Button>
+            <Button onClick={handleConfirm}>Confirmar</Button>
+          </>
+        )}
+        {isLoading && (
+          <Box>
+            <CircularProgress />
+          </Box>
+        )}
       </DialogActions>
     </Dialog>
   );
