@@ -204,7 +204,6 @@ export async function getProductsByFilters(
       q = query(
         collection(db, "products"),
         ...queryFilters,
-        /* orderBy("createdAt", "desc"), */
         limit(maxPageSize)
       );
     } else {
@@ -311,18 +310,9 @@ export default async function getCountOfQuery(filters?: object) {
           }
         }
       });
-      q = query(
-        collection(db, "products"),
-        ...queryFilters,
-        where("productState", "==", "on sale")
-        /* orderBy("createdAt", "desc") */
-      );
+      q = query(collection(db, "products"), ...queryFilters);
     } else {
-      q = query(
-        collection(db, "products"),
-        where("productState", "==", "on sale"),
-        orderBy("createdAt", "desc")
-      );
+      q = query(collection(db, "products"), orderBy("createdAt", "desc"));
     }
     const countSnapshot = await getCountFromServer(q);
 

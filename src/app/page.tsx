@@ -44,7 +44,10 @@ export default async function Home(props: {
     createdAt: { operator: "orderBy", value: "desc" },
   };
 
-  const totalProductsData = await getCountOfQuery(query);
+  const totalProductsData = await getCountOfQuery({
+    ...query,
+    productState: "on sale",
+  });
   const totalPages =
     totalProductsData?.count > PAGE_SIZE
       ? Math.floor(totalProductsData?.count / PAGE_SIZE) +

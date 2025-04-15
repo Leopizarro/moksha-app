@@ -79,12 +79,25 @@ export default function AdminProductsTable({
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell align="right">Tipo</TableCell>
-                <TableCell align="right">Estado</TableCell>
-                <TableCell align="right">Precio</TableCell>
-                <TableCell align="right">Fecha creación</TableCell>
-                <TableCell align="right">Acciones</TableCell>
+                <TableCell>
+                  {" "}
+                  <Typography fontWeight={"bold"}>Nombre</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography fontWeight={"bold"}>Tipo</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography fontWeight={"bold"}>Estado</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography fontWeight={"bold"}>Precio</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography fontWeight={"bold"}>Fecha creación</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography fontWeight={"bold"}>Acciones</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -147,13 +160,13 @@ export default function AdminProductsTable({
                               }}
                               sx={{
                                 postion: "absolute",
-                                background: "#d4af37",
+                                background: "red",
                                 top: "0",
                                 zIndex: 10,
                                 float: "left",
                                 color: "white",
                                 ":hover": {
-                                  background: "#a28834",
+                                  background: "#af1e1e",
                                 },
                               }}
                             >

@@ -33,6 +33,8 @@ interface UploadFormProps {
   product?: ProductInterface;
 }
 
+const IMAGE_MAX_PIXELS = 900;
+
 const UploadForm: React.FC<UploadFormProps> = ({
   productCategories,
   productStates,
@@ -152,7 +154,11 @@ const UploadForm: React.FC<UploadFormProps> = ({
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
-      const resizedImage = await clientResizeImage(file, 1024, 1024);
+      const resizedImage = await clientResizeImage(
+        file,
+        IMAGE_MAX_PIXELS,
+        IMAGE_MAX_PIXELS
+      );
 
       const url = URL.createObjectURL(resizedImage);
       setNewFile(resizedImage);
