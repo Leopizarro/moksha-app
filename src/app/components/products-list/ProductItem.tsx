@@ -29,6 +29,7 @@ interface ProductItemInterface {
 
 const ProductItem: React.FC<ProductItemInterface> = (props) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setAlertObject, SnackbarComponent } = useSnackbar();
   const { data: session } = useSession();
   const { product } = props;
@@ -36,6 +37,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
 
   async function handleDeleteProduct(productId: string) {
     try {
+      setIsLoading(true);
       await deleteDocFromCollection("products", productId);
       await deleteAllFilesFromFolder(`images/${productId}`);
       await deleteAllFilesFromFolder(`thumbnails/${productId}`);
@@ -46,7 +48,9 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
         severity: "success",
         message: "Producto borrado exitosamente",
       });
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       setAlertObject({
         open: true,
@@ -83,32 +87,6 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
               >
                 {session && (
                   <>
-                    <Tooltip title="Eliminar">
-                      <IconButton
-                        aria-label="delete"
-                        size="small"
-                        disabled={openModal}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setOpenModal((prevValue) => !prevValue);
-                        }}
-                        sx={{
-                          postion: "absolute",
-                          background: "#d4af37",
-                          margin: "10px",
-                          top: "0",
-                          zIndex: 10,
-                          float: "left",
-                          color: "white",
-                          ":hover": {
-                            background: "#a28834",
-                          },
-                        }}
-                      >
-                        <DeleteIcon fontSize="inherit" />
-                      </IconButton>
-                    </Tooltip>
                     <Tooltip title="Editar">
                       <IconButton
                         disabled={openModal}
@@ -125,7 +103,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                           top: "0",
                           margin: "10px",
                           zIndex: 10,
-                          float: "right",
+                          float: "left",
                           color: "white",
                           ":hover": {
                             background: "#a28834",
@@ -133,6 +111,32 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                         }}
                       >
                         <EditIcon fontSize="inherit" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Eliminar">
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        disabled={openModal}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setOpenModal((prevValue) => !prevValue);
+                        }}
+                        sx={{
+                          postion: "absolute",
+                          background: "red",
+                          margin: "10px",
+                          top: "0",
+                          zIndex: 10,
+                          float: "right",
+                          color: "white",
+                          ":hover": {
+                            background: "#af1e1e",
+                          },
+                        }}
+                      >
+                        <DeleteIcon fontSize="inherit" />
                       </IconButton>
                     </Tooltip>
                   </>
@@ -175,6 +179,7 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
         </Link>
       )}
       <Modal
+        isLoading={isLoading}
         openModal={openModal}
         dialogMessage={`¿Estás seguro de eliminar el producto: ${product.title}?`}
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}

@@ -32,6 +32,7 @@ export default function AdminProductsTable({
   products,
 }: AdminProductsTableInterface) {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<{
     id: string;
     title: string;
@@ -42,17 +43,20 @@ export default function AdminProductsTable({
 
   async function deleteProduct(productId: string) {
     try {
+      setIsLoading(true);
       await deleteDocFromCollection("products", productId);
       await deleteAllFilesFromFolder(`images/${productId}`);
       await deleteAllFilesFromFolder(`thumbnails/${productId}`);
       setOpenModal(false);
       router.refresh(); // revalidate cache and update UI
+      setIsLoading(false);
       setAlertObject({
         open: true,
         severity: "success",
         message: "Producto borrado exitosamente",
       });
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       setAlertObject({
         open: true,
@@ -188,6 +192,7 @@ export default function AdminProductsTable({
         </Typography>
       )}
       <Modal
+        isLoading={isLoading}
         openModal={openModal}
         dialogMessage={`¿Estás seguro de eliminar el producto: ${selectedProduct?.title}?`}
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}

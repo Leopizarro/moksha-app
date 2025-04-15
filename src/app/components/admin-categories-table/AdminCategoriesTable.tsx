@@ -28,6 +28,7 @@ export default function AdminCategoriesTable({
   productCategories,
 }: AdminCategoriesTableInterface) {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<{
     id: string;
     title: string;
@@ -38,6 +39,7 @@ export default function AdminCategoriesTable({
 
   async function deleteCategory(categoryId: string) {
     try {
+      setIsLoading(true);
       await deleteDocFromCollection("product_categories", categoryId);
       setOpenModal(false);
       router.refresh(); // revalidate cache and update UI
@@ -46,8 +48,10 @@ export default function AdminCategoriesTable({
         severity: "success",
         message: "Categoría borrada exitosamente",
       });
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       setAlertObject({
         open: true,
         severity: "error",
@@ -113,28 +117,6 @@ export default function AdminCategoriesTable({
                           alignSelf="center"
                           justifySelf="center"
                         >
-                          {/* <Link href={`/edit/${row.id}`}>
-                            <Tooltip title="Editar">
-                              <IconButton
-                                disabled={openModal}
-                                aria-label="delete"
-                                size="small"
-                                sx={{
-                                  postion: "absolute",
-                                  background: "#d4af37",
-                                  top: "0",
-                                  zIndex: 10,
-                                  float: "right",
-                                  color: "white",
-                                  ":hover": {
-                                    background: "#a28834",
-                                  },
-                                }}
-                              >
-                                <EditIcon fontSize="inherit" />
-                              </IconButton>
-                            </Tooltip>
-                          </Link> */}
                           <Tooltip title="Eliminar">
                             <IconButton
                               aria-label="delete"
@@ -175,6 +157,7 @@ export default function AdminCategoriesTable({
         </Typography>
       )}
       <Modal
+        isLoading={isLoading}
         openModal={openModal}
         dialogMessage={`¿Estás seguro de eliminar la cetogría: ${selectedProduct?.title}?`}
         handleCancel={() => setOpenModal((prevValue) => !prevValue)}

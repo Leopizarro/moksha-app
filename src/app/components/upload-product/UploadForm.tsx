@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   Grid2,
   InputLabel,
@@ -369,16 +370,23 @@ const UploadForm: React.FC<UploadFormProps> = ({
       </Box>
 
       <FormControl fullWidth>
-        <Button
-          type="submit"
-          variant="contained"
-          color="success"
-          sx={{ marginTop: "10px" }}
-          disabled={buttonDisabled}
-          aria-disabled={buttonDisabled}
-        >
-          {isEdit ? "Actualizar" : "Crear"}
-        </Button>
+        {!loading && (
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            sx={{ marginTop: "10px" }}
+            disabled={buttonDisabled}
+            aria-disabled={buttonDisabled}
+          >
+            {isEdit ? "Actualizar" : "Crear"}
+          </Button>
+        )}
+        {loading && (
+          <Box display="flex" justifyContent={"center"} marginTop="10px">
+            <CircularProgress />
+          </Box>
+        )}
       </FormControl>
       {SnackbarComponent}
     </form>
